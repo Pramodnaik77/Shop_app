@@ -1,0 +1,100 @@
+{% extends 'shop/basic.html' %}
+
+{% load static %}
+{% block title%}This checkout{% endblock %}
+
+ {%block link%} rel="shortcut icon" type="image/png"  href="{% static 'shop/cart.png' %}"
+    {%endblock%}
+
+
+
+{% block css%}
+        .col-md-3
+      {
+      display:inline-block;
+      margin-left:-4px
+      }
+      .carousel-indicators .active{
+      background-color:blue;
+      }
+      .col-md-3 img{
+      width:200px;
+      height:220px;
+      }
+
+      body .carousel-indicator li{
+      background-color: green;
+      }
+      body .carousel-indicators{
+          bottom: 0;
+      }
+      body .carousel-control-prev-icon,
+      body .carousel-control-next-icon{
+      background-color: blue;
+      }
+      .carousel-control-prev,
+      .carousel-control-next{
+      top: auto;
+      bottom: auto;
+      padding-top: 222px;
+      }
+      body .no-padding{
+      padding-left= 0;
+      padding-right= 0;
+      }
+
+{% endblock %}
+
+{%block body %}
+<div class="container">
+    <h1>Men Fashion</h1>
+</div>
+
+<!--    <div class = "row">-->
+<!--<div id="demo" class="col carousel slide my-3" data-ride="carousel">-->
+<!--    <ul class="carousel-indicators">-->
+<!--      <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+
+<!--       {% for i in range %}-->
+<!--      <li data-target="#demo" data-slide-to="{{i}}" ></li>-->
+<!--      {% endfor %}-->
+<!--    </ul>-->
+
+<!--    &lt;!&ndash;Slideshow starts here &ndash;&gt;-->
+<!--    <div class="container carousel-inner no-padding">-->
+
+<!--      <div class="carousel-item active">-->
+<!--        {% for i in product%}-->
+<!--        <div class="col-xs-3 col-sm-3 col-md-3">-->
+<!--          <div class="card" style="width: 17rem;">-->
+<!--            <img src='/media/{{i.image}}' class="card-img-top" alt="..." width="200" height="100" >-->
+<!--            <div class="card-body">-->
+<!--              <h6 class="card-title"><b>{{i.product_name}}</b></h6>-->
+<!--                <b><p>RS.{{i.price}}</p></b>-->
+<!--              <p class="card-text">{{i.prod_desc|slice:"0:25"}}...</p>-->
+<!--              <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>-->
+<!--              <a href="/shopkart/prodview/{{i.id}}"> <button id="qv{{i.id}}" class="btn btn-primary btn-sm">QuickView</button></a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}-->
+<!--      </div><div class="carousel-item ">-->
+<!--        {% endif %}-->
+
+<!--        {% endfor %}-->
+<!--    </div>-->
+
+<!--    </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; left and right controls for the slide &ndash;&gt;-->
+<!--       <a class="carousel-control-prev" href="#demo" data-slide="prev">-->
+<!--        <span class="carousel-control-prev-icon"></span>-->
+<!--    </a>-->
+<!--    <a class="carousel-control-next" href="#demo" data-slide="next">-->
+<!--        <span class="carousel-control-next-icon"></span>-->
+<!--    </a>-->
+<!--        </div>-->
+<!--</div>-->
+ {% endblock %}
+
+
