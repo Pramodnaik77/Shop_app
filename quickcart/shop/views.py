@@ -59,3 +59,8 @@ def contact(request):
         redirect('/shop/conatct/')
 
     return render(request, 'contact.html')
+
+
+def cart(request):
+
+    return render(request, 'cart.html')
