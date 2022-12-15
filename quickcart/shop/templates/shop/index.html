@@ -42,59 +42,97 @@
       padding-left= 0;
       padding-right= 0;
       }
-
+    .card-img, .card-img-bottom, .card-img-top {
+    width: 80%;
+}
 {% endblock %}
 
 {%block body %}
 <div class="container">
     <h1>Men Fashion</h1>
+<!--    <image src="{% static P_image %} " width="200" height="200"></image>-->
+    <div class="row">
+        {%for i in range %}
+            <div class="card" style="width: 17rem;">
+                <img src="{% static dit.3.P_image %}" class="card-img-top my-2 mx-4" alt="..." width="80" height="200">
+                <div class="card-body">
+                      <h6 class="card-title"><b>{{dit.3.Pname}}</b></h6>
+                        <b><p>RS.{{dit.3.P_price}}</p></b>
+                            <p class="card-text">{{dit.3.P_desc|slice:"0:100"}}.</p>
+            <!--          <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>-->
+                        <button type="button" class="btn btn-primary my-4" id = "demo1" onclick='myFunction()' >Add to cart</button>
+                        <a href="#"> <button id="qv{{i.id}}" class="btn btn-primary btn-sm">QuickView</button></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+<!--      <div class = "row">-->
+<!--            <div id="demo" class="col carousel slide my-3" data-ride="carousel">-->
+<!--                <ul class="carousel-indicators">-->
+<!--                   <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+<!--                  {% for i in range %}-->
+<!--                        <li data-target="#demo" data-slide-to="{{i}}" ></li>-->
+<!--                  {% endfor %}-->
+<!--                </ul>-->
 
-<!--    <div class = "row">-->
-<!--<div id="demo" class="col carousel slide my-3" data-ride="carousel">-->
-<!--    <ul class="carousel-indicators">-->
-<!--      <li data-target="#demo" data-slide-to="0" class="active"></li>-->
+<!--                Slideshow starts here-->
+<!--                <div class="container carousel-inner no-padding">-->
 
-<!--       {% for i in range %}-->
-<!--      <li data-target="#demo" data-slide-to="{{i}}" ></li>-->
-<!--      {% endfor %}-->
-<!--    </ul>-->
+<!--                  <div class="carousel-item active">-->
+<!--                    {% for i in product%}-->
+<!--                    <div class="col-xs-3 col-sm-3 col-md-3">-->
+<!--                      <div class="card" style="width: 17rem;">-->
+<!--                        <img src= "{% static P_id %} " class="card-img-top" alt="..." width="200" height="100">-->
 
-<!--    &lt;!&ndash;Slideshow starts here &ndash;&gt;-->
-<!--    <div class="container carousel-inner no-padding">-->
+<!--                        <div class="card-body">-->
+<!--                          <h6 class="card-title"><b>{{P_name}}</b></h6>-->
+<!--                            <b><p>RS.{{P_price}}</p></b>-->
+<!--                          <p class="card-text">{{P_desc|slice:"0:25"}}...</p>-->
+<!--                          <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>-->
+<!--                          <a href="/shopkart/prodview/{{i.id}}"> <button id="qv{{i.id}}" class="btn btn-primary btn-sm">QuickView</button></a>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}-->
+<!--                  </div><div class="carousel-item ">-->
+<!--                    {% endif %}-->
 
-<!--      <div class="carousel-item active">-->
-<!--        {% for i in product%}-->
-<!--        <div class="col-xs-3 col-sm-3 col-md-3">-->
-<!--          <div class="card" style="width: 17rem;">-->
-<!--            <img src='/media/{{i.image}}' class="card-img-top" alt="..." width="200" height="100" >-->
-<!--            <div class="card-body">-->
-<!--              <h6 class="card-title"><b>{{i.product_name}}</b></h6>-->
-<!--                <b><p>RS.{{i.price}}</p></b>-->
-<!--              <p class="card-text">{{i.prod_desc|slice:"0:25"}}...</p>-->
-<!--              <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>-->
-<!--              <a href="/shopkart/prodview/{{i.id}}"> <button id="qv{{i.id}}" class="btn btn-primary btn-sm">QuickView</button></a>-->
-<!--            </div>-->
+<!--                    {% endfor %}-->
+<!--                </div>-->
+
+<!--                </div>-->
 <!--          </div>-->
-<!--        </div>-->
-<!--        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}-->
-<!--      </div><div class="carousel-item ">-->
-<!--        {% endif %}-->
-
-<!--        {% endfor %}-->
+<!--          &lt;!&ndash; left and right controls for the slide &ndash;&gt;-->
+<!--            <a class="carousel-control-prev" href="#demo" data-slide="prev">-->
+<!--                 <span class="carousel-control-prev-icon"></span>-->
+<!--            </a>-->
+<!--            <a class="carousel-control-next" href="#demo" data-slide="next">-->
+<!--                  <span class="carousel-control-next-icon"></span>-->
+<!--            </a>-->
 <!--    </div>-->
-
-<!--    </div>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; left and right controls for the slide &ndash;&gt;-->
-<!--       <a class="carousel-control-prev" href="#demo" data-slide="prev">-->
-<!--        <span class="carousel-control-prev-icon"></span>-->
-<!--    </a>-->
-<!--    <a class="carousel-control-next" href="#demo" data-slide="next">-->
-<!--        <span class="carousel-control-next-icon"></span>-->
-<!--    </a>-->
-<!--        </div>-->
 <!--</div>-->
- {% endblock %}
 
+
+
+{% endblock %}
+{%block jss%}
+<script>
+      function myFunction() {
+        if (typeof(Storage) !== "undefined") {
+          if (localStorage.clickcount) {
+            localStorage.clickcount = Number(localStorage.clickcount)+1;
+          } else {
+            localStorage.clickcount = 1;
+          }
+          const text =["Add to cart",'__Remove__']
+          i = localStorage.clickcount%2
+          document.getElementById("demo1").innerHTML = text[i];
+          }
+          else {
+            document.getElementById("demo1").innerHTML = "Sorry.";
+          }
+      }
+  </script>
+ {% endblock %}
 

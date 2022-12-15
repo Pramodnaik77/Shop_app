@@ -9,7 +9,6 @@
     <title>quickcart.com</title>
     {% load static %}
       <link rel="shortcut icon" type="image/png"  href="{% static 'shop/shop-icon.png' %}">
-<!--    {% load static %}-->
 <!--      <link rel="shortcut icon" type="image/png"  href="{% static 'shop/shop-icon.png' %}">-->
   </head>
   <body>
@@ -19,7 +18,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
 <!--    <link rel="shortcut icon" type="image/png"  href="{% static 'shop/shop-icon.png' %}">-->
-    <a class="navbar-brand" href="#">Quickcart</a>
+    <a class="navbar-brand" href="#"><i class="fa-brands fa-shopify"></i>Quickcart</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -50,36 +49,39 @@
     <form action="shop/login">
      <button type="submit" class="btn btn-info mx-5" >Sign-in</button>
     </form>
-
   </div>
 </nav>
-<!--    <div class="container">-->
-<!--        <script>-->
-
-<!--    function myFunction() {-->
-<!--      if (typeof(Storage) !== "undefined") {-->
-<!--        if (localStorage.clickcount) {-->
-<!--          localStorage.clickcount = Number(localStorage.clickcount)+1;-->
-<!--        } else {-->
-<!--          localStorage.clickcount = 1;-->
-<!--        }-->
-
-<!--        const text =["Add ..to cart",'__Remove__']-->
-<!--        i = localStorage.clickcount%2-->
-<!--        document.getElementById("demo1").innerHTML = text[i];-->
-<!--        }-->
-<!--        else {-->
-<!--          document.getElementById("demo1").innerHTML = "Sorry.";-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-<!--        <button type="button" class="btn btn-primary my-4" id = "demo1" onclick='myFunction()' >Add ..to cart</button>-->
-
-
     </div>
+  <link rel="shortcut icon" type="image/png"  href="{% static 'shop/shop-icon.png' %}">
+  <!--    <div class="container">-->
+  <!--        <script>-->
+  <!--    function myFunction() {-->
+  <!--      if (typeof(Storage) !== "undefined") {-->
+  <!--        if (localStorage.clickcount) {-->
+  <!--          localStorage.clickcount = Number(localStorage.clickcount)+1;-->
+  <!--        } else {-->
+  <!--          localStorage.clickcount = 1;-->
+  <!--        }-->
+  <!--        const text =["Add ..to cart",'__Remove__']-->
+  <!--        i = localStorage.clickcount%2-->
+  <!--        document.getElementById("demo1").innerHTML = text[i];-->
+  <!--        }-->
+  <!--        else {-->
+  <!--          document.getElementById("demo1").innerHTML = "Sorry.";-->
+  <!--        }-->
+  <!--    }-->
+  <!--</script>-->
+  <!--        <button type="button" class="btn btn-primary my-4" id = "demo1" onclick='myFunction()' >Add ..to cart</button>-->
+  <!--    {% load static %}-->
+<!--    <div class="container"><image src="{% static abc %} " width="200" height="200"></image></div>-->
+
+
+
+    <script src="https://kit.fontawesome.com/3dbdfeb941.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
   </body>
 </html>
 

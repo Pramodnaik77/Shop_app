@@ -19,10 +19,12 @@
   {% load static %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
+    <i class="fa-solid fa-cart-circle-plus"></i>
     <a class="navbar-brand" href="/"><img src="{% static 'shop/shop-icon.png' %}" height="30" alt="" loading="lazy" style="margin-top: -1px"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -44,21 +46,23 @@
     </div>
     <div>
 <!--          <a class="btn btn-primary mx-4" href="/shop/" role="button">Cart</a>-->
-      <a class="btn btn-primary mx-4"href="cart/"><img src="{% static 'shop/d7.png' %}" height="25" width="30" alt="" loading="lazy" style="margin-top: -2px">Cart</a>
+      <a class="btn btn-primary mx-4"href="/shop/cart/"><i class="fa-solid fa-1x fa-cart-plus"></i>Cart</a>
     </div>
+<!--    <img src="{% static 'shop/d7.png' %}" height="25" width="30" alt="" loading="lazy" style="margin-top: -2px">-->
     <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
   </div>
 </nav>
-
+ <script src="https://kit.fontawesome.com/3dbdfeb941.js" crossorigin="anonymous"></script>
   {%block body %} {% endblock %}
 
+<!--<script src="https://kit.fontawesome.com/3dbdfeb941.js" crossorigin="anonymous"></script>-->
 
 
 
-
+{%block jss%} {% endblock%}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
