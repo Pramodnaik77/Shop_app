@@ -11,17 +11,22 @@ def index(request):
     c = "select * from Product"
     cursor.execute(c)
     t = tuple(cursor.fetchall())
-    d = {}
-    for i in range(len(t)):
+    d = []#{}
+    for i in range(0, len(t)):
         params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2], 'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
-        d[i] = params
-    # print(d[1]['Pname'])
+        #d[i] = params
 
+        d.append(params)
+    # for i in range(2):
+    #     print(d[i]['Pname'])
+    #
+    # params = {'Pid': t[1][0], 'P_name': t[1][1], 'P_image': t[1][2], 'P_desc': t[1][3], 'P_brand': t[1][4],
+    #           'P_price': t[1][5]}
+    #
+    # print(params)
+    # params = {'range': range(4), 'dit': params}
 
-    # params = {'Pid': t[3][0], 'P_name': t[3][1], 'P_image': t[3][2], 'P_desc': t[3][3], 'P_brand': t[3][4], 'P_price': t[3][5]}
-    params = {'range': range(4), 'dit': d}
-
-    return render(request, 'shop/index.html', params)
+    return render(request, 'shop/index.html', {'range': range(4), 'dit': d})
 
 
 def register(request):

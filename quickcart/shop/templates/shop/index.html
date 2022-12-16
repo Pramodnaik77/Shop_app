@@ -48,20 +48,21 @@
 {% endblock %}
 
 {%block body %}
+{% load static %}
 <div class="container">
     <h1>Men Fashion</h1>
 <!--    <image src="{% static P_image %} " width="200" height="200"></image>-->
     <div class="row">
-        {%for i in range %}
+        {% for i in dit %}
             <div class="card" style="width: 17rem;">
-                <img src="{% static dit.3.P_image %}" class="card-img-top my-2 mx-4" alt="..." width="80" height="200">
+                <img src="{% static i.P_image %}" class="card-img-top my-2 mx-4" alt="..." width="80" height="200">
                 <div class="card-body">
-                      <h6 class="card-title"><b>{{dit.3.Pname}}</b></h6>
-                        <b><p>RS.{{dit.3.P_price}}</p></b>
-                            <p class="card-text">{{dit.3.P_desc|slice:"0:100"}}.</p>
+                      <h6 class="card-title"><b>{{i.Pname}}</b></h6>
+                        <b><p>RS.{{i.P_price}}</p></b>
+                            <p class="card-text">{{i.P_desc|slice:"0:100"}}...</p>
             <!--          <a href="#" class="btn btn-primary btn-sm">Add To Cart</a>-->
-                        <button type="button" class="btn btn-primary my-4" id = "demo1" onclick='myFunction()' >Add to cart</button>
-                        <a href="#"> <button id="qv{{i.id}}" class="btn btn-primary btn-sm">QuickView</button></a>
+                        <button type="button" class="btn btn-primary my-4  "id = "id{{i}}" onclick='myFunction({{i}})' >Add to cart</button>
+                        <a href="#"> <button id="demo{{i}}" class="btn btn-primary btn-sm mx-2">QuickView</button></a>
                 </div>
             </div>
         {% endfor %}
@@ -118,20 +119,23 @@
 {% endblock %}
 {%block jss%}
 <script>
-      function myFunction() {
+      function myFunction(l) {
+      console.log(l)
         if (typeof(Storage) !== "undefined") {
           if (localStorage.clickcount) {
             localStorage.clickcount = Number(localStorage.clickcount)+1;
           } else {
             localStorage.clickcount = 1;
           }
-          const text =["Add to cart",'__Remove__']
+          const text =["Add to cart",'_ Remove _']
           i = localStorage.clickcount%2
-          document.getElementById("demo1").innerHTML = text[i];
+          id = "id"+l
+          document.getElementById(id).innerHTML = text[i];
           }
           else {
-            document.getElementById("demo1").innerHTML = "Sorry.";
+            document.getElementById(id).innerHTML = "Sorry.";
           }
+<!--          console.log(id)-->
       }
   </script>
  {% endblock %}
