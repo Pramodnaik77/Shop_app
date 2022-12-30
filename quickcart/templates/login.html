@@ -19,42 +19,53 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <div class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/shop/"> shopkart </a>
         </li>
-      </div>
+      </ul>
     </div>
+        <form action="../register">
+        <button type="submit" class="btn btn-primary mx-1" >Register</button>
+        </form>
   </div>
   </nav>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Welcome!!</strong> This is Login page
+<!--  {% if messages%}-->
+{% for message in messages %}
+<!--      <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">-->
+<!--        <strong>meassage</strong> {{message}}-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--      </div>-->
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+      <strong></strong>{{message}}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times</span>
       </button>
     </div>
+{%endfor%}
+<!--  {%endif%}-->
   <div class = "container">
     <br>
     <h5>Login Here</h5>
     <br>
-    <form action="/shop/login/" method="post">{% csrf_token %}
+    <form action="/shop/login_check/" method="post">{% csrf_token %}
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="name" class="form-control" id="name" name="name" placeholder="Enter Your Name">
+        <input type="name" class="form-control" id="name" name="name" placeholder="Enter Your Name"required>
 
       </div>
       <div class="form-group">
         <label for="password" >Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
       </div>
 
 
       <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">I accept all the terms and conditions</label>
+        <input type="checkbox" class="form-check-input" id="check" required>
+        <label class="form-check-label" for="check" >I accept all the terms and conditions</label>
       </div>
       <button type="submit" class="btn btn-success">Submit</button>
     </form>

@@ -1,10 +1,81 @@
 {% extends 'shop/basic.html' %}
 {% block title %} Cart{% endblock %}
+{%block css %}
+.demo{
+    width:670px;
+}
+div.elem{
+width:670px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+{%endblock%}
 {% block body %}
 
+{%load static%}
 
-<br><h4>Hello welcome to cart</h4>
+<div class="container">
+
+<!--        <div class="card my-4" style="width: 20rem; height:25rem;">-->
+<!--              <image src="{% static 'shop/empty-cart.png' %} "></image>-->
+<!--              <div class="card-body">-->
+<!--                  <p>Cart is empty</p>-->
+<!--              </div>-->
+<!--            </div>-->
 
 
+    {%if user.is_authenticated%}
+         {%if len == 0%}
+        <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 90px 332px 80px;width:1000px;height:500px;">
+             <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
+            <br>
+            <p class="empty px-5 py-3" style="font-size:20px">Your cart is empty!</p>
+            <p class="empty px-5" style="font-size:14px">Add items to it now.</p>
+            <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
+        </div>
+        {%else%}
+        <b><p class="length my-4">Total products in the cart: {{len}}</p></b>
+        <div class="elem" >
+                {%for i in dict%}
+                    <div class="elem{{i.P_id}}" style="box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;">
+                        <div class="row">
+                            <div class="elem{{i.P_id}} col-md-6">
+                                <div class="row my-3 mx-4">
+                                    <image src="{% static i.P_image %} " width="150" height="150"></image>
+                                </div>
+                            </div>
+                            <div class="elem{{i.P_id}} col-md-3 my-4">
+                                <b><p>{{i.Pname}}</p></b>
+                                <p>RS.{{i.P_price}}</p>
+                                <div class="row">
+                                     <button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 6px;text-align: center;">+</button>
+                                     <span>1</span>
+                                     <button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 8px;text-align: center;">-</button>
+                                </div>
+            <!--                    <p>{{i.P_desc}}</p>-->
 
+                            </div>
+                        </div>
+                    </div>
+            {% endfor%}
+
+                </div>
+            <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px 0px; padding: 30px 30px 60px;" width="80px" height="10px">
+                <button type="button" style="background-color:#FF5F1F;color:white;width:200px;height:45px"class="btn float-right mx-4 " width="120">Place  Order</button>
+            </div>
+            {%endif%}
+        {%else%}
+              <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 90px 332px 80px;width:1000px;height:500px;">
+               <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
+                <br>
+                <p class="empty px-5 py-3" style="font-size:20px">Signin to add items!!!</p>
+    <!--            <p class="empty px-5" style="font-size:14px">Add items to it now.</p>-->
+                <a href="/shop/login_check"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Log in</button></a>
+                </div>
+        {% endif %}
+
+</div>
 {%endblock%}
