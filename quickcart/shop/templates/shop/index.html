@@ -61,7 +61,7 @@
       </button>
     </div>
 {%endfor%}
-<div class="container">
+<div class="container py-4">
 
 
 <!--    <image src="{% static P_image %} " width="200" height="200"></image>-->
@@ -82,8 +82,8 @@
 <!--    </div>-->
 <!--</div>-->
 
-    {%for dit ,range, nslides in allprods%}
-    <h1>Men Fashion</h1>
+    {%for dit,range,nslides,cat in allprods %}
+    <h4 class="mx-4 my-3">{{cat}}</h4>
     <div class = "row">
         <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
             <ul class="carousel-indicators">
@@ -104,9 +104,9 @@
                         <b><p>RS.{{i.P_price}}</p></b>
                         <p class="card-text">{{i.P_desc|slice:"0:52"}}...</p>
                         {%if i.Pid in len%}
-                            <a href="/shop/remove/{{i.Pid}}"><button type="button" class="btn btn-primary btn-sm my-4  cart" id = "{{i.Pid}}" onclick="Remove_from_the_cart('{{i.Pname}}')"> Remove </button></a>
+                            <a href="/shop/remove/{{i.Pid}}"><button type="button" class="btn btn-primary btn-sm my-4  cart" id = "{{i.Pid}}" onclick="Remove_from_the_cart('{{i.Pname}}','{{user.is_authenticated}}')"> Remove </button></a>
                         {%else%}
-                         <a href="/shop/cart/{{i.Pid}}"><button type="button" class="btn btn-primary btn-sm my-4  cart" onclick="Add_to_cart('{{i.Pname}}')"><span id="cart{{i.Pid}}">Add to cart</span></button></a>
+                         <a href="/shop/cart/{{i.Pid}}"><button type="button" class="btn btn-primary btn-sm my-4  cart" onclick="Add_to_cart('{{i.Pname}}','{{user.is_authenticated}}')"><span id="cart{{i.Pid}}">Add to cart</span></button></a>
                         {%endif%}
                         <a href="/shop/prodview/{{i.Pid}}"> <button id="qv{{i.Pid}}" class="btn btn-primary btn-sm mx-2">QuickView</button></a>
                     </div>
@@ -116,7 +116,7 @@
               </div><div class="carousel-item ">
                 {% endif %}
 
-                {% endfor %}
+            {% endfor %}
             </div>
 
             </div>
@@ -138,11 +138,16 @@
 {%block jss%}
 <script>
 
-      function Add_to_cart(Pname) {
-        alert(Pname+" added to cart successfully")
+      function Add_to_cart(Pname,val) {
+      if(val == 'True'){
+            alert(Pname+" added to cart successfully")
+        }
+
       }
-      function Remove_from_the_cart(Pname) {
+
+      function Remove_from_the_cart(Pname,stat) {
         alert(Pname+" removed from cart!!!")
+
       }
 
 

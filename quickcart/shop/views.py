@@ -12,26 +12,38 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
     cursor = m.cursor()
-    c = "select * from Product"
-    cursor.execute(c)
+    q = "select * from category"
+    cursor.execute(q)
+    allprods = []
     t = tuple(cursor.fetchall())
-    dit = []
-
-    for i in range(0, len(t)):
-        params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
-                  'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
-        dit.append(params)
+    for j in range(len(t)):
+        ml = t[j][0]
+        # print("hello",ml)
+        c = "select * from Product where P_catid='{}'".format(ml)
+        cursor.execute(c)
+        tp = tuple(cursor.fetchall())
+        # print(tp)
+        dit = []
+        for i in range(0, len(tp)):
+            params = {'Pid': tp[i][0], 'Pname': tp[i][1], 'P_image': tp[i][2],
+                      'P_desc': tp[i][3], 'P_brand': tp[i][4], 'P_price': tp[i][5]}
+            dit.append(params)
+        n = len(dit)
+        # print(dit,n)
+        cat = t[j][1]
+        nslides = n // 4 + ceil((n / 4) - (n // 4))
+        allprods.append([dit, range(1, nslides), nslides, cat])
+    # print(allprods)
     l = []
-    c = "select * from cart"
-    cursor.execute(c)
-    t = tuple(cursor.fetchall())
+    if request.user.is_authenticated:
+        cust = request.user.email
+        c = "select * from cart where cust_id='{}'".format(cust)
+        cursor.execute(c)
+        t = tuple(cursor.fetchall())
 
-    for i in range(len(t)):
-        l.append(t[i][1])
-    n = len(t)
-    # print(l)
-    nslides = n // 4 + ceil((n / 4) - (n // 4))
-    allprods = [[dit, range(1, nslides), nslides], [dit, range(1, nslides), nslides]]
+        for i in range(len(t)):
+            l.append(t[i][1])
+
     param = {'allprods': allprods, 'len': l}
     return render(request, 'shop/index.html', param)
 
@@ -130,46 +142,54 @@ def cart(request, myid):
     if myid != 9481:
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
         cursor = m.cursor()
-        c = "select * from product where P_id='{}'".format(myid)
-        cursor.execute(c)
-        t = tuple(cursor.fetchall())
+        if request.user.is_authenticated:
+            cust = request.user.email
+            c = "select * from product where P_id='{}'".format(myid)
+            cursor.execute(c)
+            t = tuple(cursor.fetchall())
+            d = {}
+            c = "insert into cart values ('{}','{}','{}')".format(cust, t[0][0], 1)
+            cursor.execute(c)
+            m.commit()
 
-        d = {}
-        c = "insert into cart values ( null,'{}','{}')".format(t[0][0], 1)
-        cursor.execute(c)
-        m.commit()
-        return redirect('/shop')
-
+            return redirect('/shop')
+        else:
+            messages.error(request, "Login to add the items to cart")
+            return redirect('/shop')
     m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
     cursor = m.cursor()
     # c = "select * from cart"
     # cursor.execute(c)
     # l = tuple(cursor.fetchall())
-
-    c = "select count(*) from cart"
-    cursor.execute(c)
-    n = tuple(cursor.fetchall())
-    if n != ():
-        n = n[0][0]
+    if request.user.is_authenticated:
+        cust = request.user.email
+        c = "select count(*) from cart where cust_id ='{}'".format(cust)
+        cursor.execute(c)
+        n = tuple(cursor.fetchall())
+        if n != ():
+            n = n[0][0]
+        else:
+            n = 0
+        c = "select * from product p JOIN cart c on p.P_id=c.P_id and cust_id ='{}' ".format(cust)
+        cursor.execute(c)
+        t = tuple(cursor.fetchall())
+        d = []
+        if t != ():
+            for i in range(0, len(t)):
+                params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
+                          'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
+                d.append(params)
     else:
         n = 0
-    c = "select * from product p JOIN cart c on p.P_id=c.P_id "
-    cursor.execute(c)
-    t = tuple(cursor.fetchall())
-
-    d = []
-    if t != ():
-        for i in range(0, len(t)):
-            params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
-                      'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
-            d.append(params)
+        d = []
     return render(request, 'cart.html', {"len": n, "dict": d})
 
 
 def remove(request, myid):
     m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
     cursor = m.cursor()
-    c = "delete from cart where P_id='{}'".format(myid)
+    cust = request.user.email
+    c = "delete from cart where P_id='{}' and cust_id='{}'".format(myid, cust)
     cursor.execute(c)
     m.commit()
 
@@ -179,10 +199,13 @@ def remove(request, myid):
 def search_items(request):
     if request.method == 'POST':
         desc1 = request.POST['desc1']
-        desc1=desc1.lower()
+        desc1 = desc1.lower()
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
         cursor = m.cursor()
-        c = "select * from Product where P_name='{}' or P_desc like '{}' or P_brand='{}' or P_price='{}'".format(desc1,desc1,desc1,desc1)
+        c = "select * from Product where P_name='{}' or P_desc like '{}' or P_brand='{}' or P_price='{}'".format(desc1,
+                                                                                                                 desc1,
+                                                                                                                 desc1,
+                                                                                                                 desc1)
         cursor.execute(c)
         t = tuple(cursor.fetchall())
 
