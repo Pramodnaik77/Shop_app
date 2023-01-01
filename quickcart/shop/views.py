@@ -174,15 +174,18 @@ def cart(request, myid):
         cursor.execute(c)
         t = tuple(cursor.fetchall())
         d = []
+        total = 0
         if t != ():
             for i in range(0, len(t)):
                 params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
                           'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
+                total += t[i][5]
                 d.append(params)
     else:
         n = 0
         d = []
-    return render(request, 'cart.html', {"len": n, "dict": d})
+        total = 0
+    return render(request, 'cart.html', {"len": n, "dict": d, "total": total, "tot": total - 100})
 
 
 def remove(request, myid):
@@ -199,36 +202,89 @@ def remove(request, myid):
 def search_items(request):
     if request.method == 'POST':
         desc1 = request.POST['desc1']
-        desc1 = desc1.lower()
+        # desc1 = desc1.lower()
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
         cursor = m.cursor()
-        c = "select * from Product where P_name='{}' or P_desc like '{}' or P_brand='{}' or P_price='{}'".format(desc1,
-                                                                                                                 desc1,
-                                                                                                                 desc1,
-                                                                                                                 desc1)
-        cursor.execute(c)
+        # c = "select * from Product where ".format(desc1,
+        #                                                                                                          desc1,
+        #                                                                                                          desc1,
+        #                                                                                                          desc1)
+
+        q = "select * from category"
+        cursor.execute(q)
+        allprods = []
         t = tuple(cursor.fetchall())
-
-        if t != ():
-            dit = []
-
-            for i in range(0, len(t)):
-                params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
-                          'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
-                dit.append(params)
-            l = []
-            c = "select * from cart"
+        # for j in range(len(t)):
+        #     ml = t[j][0]
+        #     # print("hello",ml)
+        #     c = "select * from Product where P_catid='{}' and (P_name='{}'" \
+        #         " or P_desc like '{}' or P_brand='{}' or P_price='{}')".format(ml, desc1, desc1, desc1, desc1)
+        #     cursor.execute(c)
+        #     tp = tuple(cursor.fetchall())
+        #     if tp != ():
+        #         # print(tp)
+        #         dit = []
+        #         for i in range(0, len(tp)):
+        #             params = {'Pid': tp[i][0], 'Pname': tp[i][1], 'P_image': tp[i][2],
+        #                       'P_desc': tp[i][3], 'P_brand': tp[i][4], 'P_price': tp[i][5]}
+        #             dit.append(params)
+        #         n = len(dit)
+        #         # print(dit,n)
+        #         cat = t[j][1]
+        #         nslides = n // 4 + ceil((n / 4) - (n // 4))
+        #         allprods.append([dit, range(1, nslides), nslides, cat])
+        for j in range(len(t)):
+            ml = t[j][0]
+            # print("hello",ml)
+            c = "select * from Product where P_catid='{}'".format(ml)
             cursor.execute(c)
-            t = tuple(cursor.fetchall())
+            tp = tuple(cursor.fetchall())
+            print(tp)
+            if tp != ():
+                # print(tp)
+                s = " "
+                dit = []
+                for i in range(0, len(tp)):
+                    s = tp[i][1] + " " + tp[i][3] + " " + tp[i][4] + " " + str(tp[i][5])
+                    print(s)
 
-            for i in range(len(t)):
-                l.append(t[i][1])
-            n = len(t)
-            # print(l)
-            nslides = n // 4 + ceil((n / 4) - (n // 4))
-            allprods = [[dit, range(1, nslides), nslides], [dit, range(1, nslides), nslides]]
-            param = {'allprods': allprods, 'len': l}
-            return render(request, 'shop/index.html', param)
-        else:
+                    if desc1.lower() in s.lower():
+
+                        params = {'Pid': tp[i][0], 'Pname': tp[i][1], 'P_image': tp[i][2],
+                                      'P_desc': tp[i][3], 'P_brand': tp[i][4], 'P_price': tp[i][5]}
+                        dit.append(params)
+                if dit != []:
+                    n = len(dit)
+                            # print(dit,n)
+                    cat = t[j][1]
+                    nslides = n // 4 + ceil((n / 4) - (n // 4))
+                    allprods.append([dit, range(1, nslides), nslides, cat])
+
+        # cursor.execute(c)
+        # t = tuple(cursor.fetchall())
+        #
+        # if t != ():
+        #     dit = []
+        #
+        #     for i in range(0, len(t)):
+        #         params = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2],
+        #                   'P_desc': t[i][3], 'P_brand': t[i][4], 'P_price': t[i][5]}
+        #         dit.append(params)
+        #     l = []
+        #     c = "select * from cart"
+        #     cursor.execute(c)
+        #     t = tuple(cursor.fetchall())
+        #
+        #     for i in range(len(t)):
+        #         l.append(t[i][1])
+        #     n = len(t)
+        #     # print(l)
+        #     nslides = n // 4 + ceil((n / 4) - (n // 4))
+        #     allprods = [[dit, range(1, nslides), nslides], [dit, range(1, nslides), nslides]]
+        #     param = {'allprods': allprods, 'len': l}
+        if allprods == []:
             messages.error(request, "No product found")
             return redirect('/shop')
+        else:
+            param = {'allprods': allprods, 'len': 1}
+            return render(request, 'shop/index.html', param)

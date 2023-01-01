@@ -12,6 +12,72 @@ width:670px;
   text-align: center;
 }
 
+#price{
+<!--display:flex;-->
+<!--background-color:Red;-->
+<!--background-size: 40px 40px;-->
+    width:150px;
+    height:336px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px;
+<!--    padding:0px 0px 0px 16px;-->
+    text-align: center;
+}
+.demo1{
+    position: relative;
+    width: 383px;
+    height: 60px;
+    left: -17px;
+
+    font-size: large;
+    display: block;
+    text-transform: uppercase;
+    padding: 18px 37px;
+    font-weight: var(--font-medium);
+    color: grey;
+
+}
+.demo2{
+    position: relative;
+    top:5px;
+    width: 383px;
+    height: 50px;
+    left: -17px;
+
+    font-size: medium;
+    display: block;
+    text-transform: uppercase;
+    padding: 18px 37px;
+    font-weight: var(--font-medium);
+    color: black;
+
+}
+.ok{
+    top:12px;
+    position: relative;
+    left: -17px;
+    padding: 5px 37px;
+    font-size: medium;
+    display: block;
+    font-weight: var(--font-medium);
+    color: green;
+}
+.rate1 {
+position: relative;
+top:20px;
+padding: 20px 24px;
+}
+.rate2 {
+padding: 5px 24px;
+}.rate3 {
+padding: 2px 24px;
+}
+<!--.P-id {-->
+<!--padding: 55px 26px;-->
+<!--}-->
+
+
+
+
 {%endblock%}
 {% block body %}
 
@@ -29,7 +95,7 @@ width:670px;
 
     {%if user.is_authenticated%}
          {%if len == 0%}
-        <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 90px 332px 80px;width:1000px;height:500px;">
+        <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
              <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
             <br>
             <p class="empty px-5 py-3" style="font-size:20px">Your cart is empty!</p>
@@ -37,8 +103,9 @@ width:670px;
             <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
         </div>
         {%else%}
-        <b><p class="length my-4">Total products in the cart: {{len}}</p></b>
-        <div class="elem" >
+        <div class="row py-5">
+<!--        <b><p class="length my-4">Total products in the cart: {{len}}</p></b>-->
+        <div class="col-md-8" >
                 {%for i in dict%}
                     <div class="elem{{i.P_id}}" style="box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;">
                         <div class="row">
@@ -62,9 +129,63 @@ width:670px;
                     </div>
             {% endfor%}
 
-                </div>
-            <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px 0px; padding: 30px 30px 60px;" width="80px" height="10px">
+
+            <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 30px 30px 60px;" width="80px" height="10px">
                 <button type="button" style="background-color:#FF5F1F;color:white;width:200px;height:45px"class="btn float-right mx-4 " width="120">Place  Order</button>
+            </div>
+        </div>
+            <div class="price col-md-4" id="price">
+                 <div class="demo1" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px;">
+                <p class="p_d">Price details</p>
+                </div>
+                <div class="rate1">
+                     <div class="row">
+                        <div class="col-md-9">
+                    <p>Price ({{len}} items) </p>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="rate py-5">₹{{total}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rate2">
+                     <div class="row">
+                        <div class="col-md-9">
+                    <p>Discount </p>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="rate py-5" style="color:green;">-₹100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rate3">
+                     <div class="row">
+                        <div class="col-md-9">
+                    <p>Delivery </p>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="rate py-5" style="color:green;">FREE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo2" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px;">
+                <div class="row">
+                        <div class="col-md-9">
+                    <b><p>Total </p></b>
+                        </div>
+                        <div class="col-md-3">
+                            <b><span class="rate">₹{{tot}}</span></b>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="demo3" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px;">-->
+<!--                <p class="p_d">You will save ₹803 on this order</p>-->
+<!--                </div>-->
+                <p class="ok">You will save ₹100 on this order</p>
+<!--
+               <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 300px 1px 0px;width:100px;">-->
+<!--                    <div>-->
+            </div>
             </div>
             {%endif%}
         {%else%}
