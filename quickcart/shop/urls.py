@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+
 urlpatterns = [
     path("", views.index, name='shop'),
     path("contact/", views.contact, name="contact"),
@@ -12,4 +13,8 @@ urlpatterns = [
     path('logout_check/', views.logout_check, name="logout_check"),
     path('search_items/', views.search_items, name="search_items"),
     path('prodview/<int:myid>', views.prod_view, name="prod_view"),
+    path('order/', views.order, name="order"),
+    path('inc_item/<int:myid>', views.inc_item, name="inc_item"),
+    path('dec_item/<int:myid>', views.dec_item, name="dec_item"),
+    path('change_address/', views.change_address, name="change_address"),
 ]

@@ -118,10 +118,12 @@ padding: 2px 24px;
                                 <b><p>{{i.Pname}}</p></b>
                                 <p>RS.{{i.P_price}}</p>
                                 <div class="row">
-                                     <button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 6px;text-align: center;">+</button>
-                                     <span>1</span>
-                                     <button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 8px;text-align: center;">-</button>
+                                    <a href="/shop/dec_item/{{i.Pid}}"><button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 8px;text-align: center;">-</button></a>
+                                     <span>{{i.P_quantity}}</span>
+                                    <a href="/shop/inc_item/{{i.Pid}}"><button type="button" class="btn btn-primary btn-xs mx-2" style="padding:1px 6px;text-align: center;">+</button></a>
+
                                 </div>
+                                <a href="/shop/remove/{{i.Pid}}"><button type="button" class="btn btn-primary btn-sm my-4  cart" id = "{{i.Pid}}"> Remove </button></a>
             <!--                    <p>{{i.P_desc}}</p>-->
 
                             </div>
@@ -131,7 +133,7 @@ padding: 2px 24px;
 
 
             <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 30px 30px 60px;" width="80px" height="10px">
-                <button type="button" style="background-color:#FF5F1F;color:white;width:200px;height:45px"class="btn float-right mx-4 " width="120">Place  Order</button>
+                <a href="/shop/order/" style="background-color:#FF5F1F;color:white;width:200px;height:45px"class="btn float-right mx-4 " width="120">Place  Order</a>
             </div>
         </div>
             <div class="price col-md-4" id="price">
@@ -154,7 +156,7 @@ padding: 2px 24px;
                     <p>Discount </p>
                         </div>
                         <div class="col-md-3">
-                            <span class="rate py-5" style="color:green;">-₹100</span>
+                            <span class="rate py-5" style="color:green;">-₹{{dis}}</span>
                         </div>
                     </div>
                 </div>

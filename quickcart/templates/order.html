@@ -1,0 +1,594 @@
+{% extends 'shop/basic.html' %}
+{% block title %} order {% endblock %}
+
+{%block linkage%}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+{%endblock%}
+
+{%block css%}
+.demo{
+width:589px;
+}
+    .table-content{
+       /*border-collapse: collapse;
+         margin:25px 0;
+         font-size: 0.9em;
+         min-width:400px;
+         width: 560px;
+         height: 200px;
+<!--         border-radius: 5px 5px 0 0;-->
+         overflow: hidden;
+         box-shadow:0 0 0 40px rgba(0,0,0, 0.15);*/
+         border-collapse: collapse;
+         /* margin:25px 0; */
+         font-size: 0.9em;
+         min-width:400px;
+         width: 500px;
+         height: 200px;
+<!--         border-radius: 5px 5px 0 0;-->
+         overflow: hidden;
+         box-shadow:0 0 40px rgba(0,0,0, 0.15);
+
+
+    }
+
+    .table-content thead tr{
+        background-color: #B2BEB5;
+        color:white;
+        text-align: left;
+        font-weight: bold;
+
+
+    }
+    .table-content th,
+    .table-content td{
+        padding: 18px 30px;
+    }
+    .table-content tbody tr{
+        border-bottom:1px solid #dddddd;
+
+    }
+
+    .ff{
+        display: inline-block;
+
+    }
+    .table-content tbody td img{
+       display: inline-block;
+       width: 50px;
+       height: 60px;
+
+    }
+    a:hover{
+        color: #dddddd;
+
+    }
+<!--    a:visited{-->
+<!--        background-color: orange;-->
+<!--    }-->
+
+.userbt{
+padding:7px 10px;
+border-radius:5px 5px;
+
+}
+    .invoice{
+        max-width:800px;
+        margin:auto;
+        padding:30px;
+        border:1px solid #eee;
+        box-shadow:0 0 10px rgba(0, 0,0, 0.15);
+        font-size:16px;
+        Line-height:24px;
+        font-family:Arial,sans-serif;
+
+
+    }
+    .invoice table{
+        width:100%;
+        line-height:inherit;
+        text-align:left;
+
+    }
+    .invoice table td{
+        padding:5px;
+        vertical-align:top;
+
+    }
+
+
+
+    .invoice table tr.top table td{
+        padding-bottom:20px;
+
+    }
+    .invoice table tr.information table td{
+        padding-bottom: 40px;
+    }
+    .invoice table tr.heading td{
+        background: #eee;
+        border-bottom: 1px solid #ddd;
+        font-weight:bold;
+    }
+    .invoice table tr.details td{
+        padding-bottom: 20px;
+    }
+    .invoice table tr.item td{
+        border-bottom: 1px solid #eee;
+    }
+    .container
+    {
+
+        background-color: white;
+        margin: 60px;
+        width: 565px;
+        height: 225px;
+    margin-left: 120px;
+    padding-top: 38px;
+    padding-left: 48px;
+    box-shadow: rgb(0 0 0/25%) 0px 1px 1px 3px;
+<!--    box-shadow: 0 0 10px rgba(231, 5, 39, 0.995);-->
+    display: inline-block;
+    }
+    body{
+      font-family: "raleway";
+    }
+
+
+.center{
+  position: absolute;
+  /* top:50%;
+  left:50%; */
+  transform:translate(-50%,-50%);
+}
+
+.popup-overlay{
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+    height: 100vh;
+    z-index: 1;
+    background: rgba(0,0,0,0.5);
+    display:none;
+}
+.popup{
+    position:absolute;
+    top:-150%;
+    left:40%;
+    transform: translate(-50%,-50%) scale(1.15);
+    width:500px;
+    height: 370px;
+    background: #f5f5f5;
+    z-index:2;
+    opacity: 0;
+    box-shadow: 5px 5px 3px rgba(0,0,0,0.2);
+    transition: transform 300ms ease-in-out,opacity 300ms ease-in-out;
+}
+body.showchangeform .popup-overlay{
+    display:block;
+}
+body.showchangeform .popup{
+    top:50%;
+    opacity: 1;
+    transform:translate(-50%,-50%) scale(1);
+}
+.popup .popup-close{
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:35px;
+    height:40px;
+    background: #54A;
+    color: #f5f5f5;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    cursor:pointer;
+
+}
+.popup form .header
+{
+    text-align: center;
+    font-size:20px;
+    font-weight: 600;
+    color:#222;
+    margin:30px 0px;
+
+}
+.popup form .element{
+    padding:12px 50px;
+}
+.popup form .element label{
+    display: block;
+    font-size: 18px;
+    color:#222;
+    margin-bottom: 5px;
+}
+.popup form .element input{
+    width:100%;
+    padding: 5px 3px;
+    box-sizing: boder-box;
+    outline: none;
+    border:1px solid #aaa;
+    background:#eee;
+<!--    border-radius: 5px;-->
+
+}
+.popup form .element button{
+    margin-top: 30px;
+    width: 70px;
+    height: 30px;
+    padding-top: 5px;
+    text-transform: uppercase;
+    outline: none;
+    font-size: 13px;
+    font-weight: 600;
+<!--    border-radius: 7px;-->
+    cursor: pointer;
+    background-color: green;
+    color:white;
+}
+
+{%endblock%}
+{%block body%}
+
+{%load static%}
+    <div class="orderspage">
+        <div class="row">
+            <div class="col-md-6">
+
+    <div class="ff" style="margin-top: 50px;
+       margin-left: 150px;" >
+        <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 40px 2px; padding: 17px 167px 11px; background-color:#2874f0" width="80px" height="10px"  >
+       <h2 style="color:white;font-style: normal; font-size: 20px;">Order Summary</h2>
+        </div>
+   <table class="table-content" style="width:590px;">
+      <thead>
+         <tr>
+             <th>PRODUCT</th>
+              <th>QTY</th>
+              <th>AMOUNT</th>
+         </tr>
+    </thead>
+     <tbody>
+     {%for i in dit%}
+         <tr>
+
+            <td><img src={% static i.P_image %} alt="not"><p style="font-size:12px;">{{i.Pname}}</p></td>
+            <td>{{i.P_quantity}}</td>
+            <td>{{i.P_price}}</td>
+
+         </tr>
+     {%endfor%}
+<!--         <tr>-->
+
+<!--            <td><img src="{% static dit.0.P_image %} " alt="not"><br>{{dit.0.Pname}}</td>-->
+<!--            <td>mi</td>-->
+<!--            <td>Rs.ll</td>-->
+
+<!--         </tr>-->
+          <!-- <tr>
+
+            <td colspan="2" align="rigth" style="font-size: 18px; letter-spacing:1px; color: green;    padding-left: 250px;"><strong>Total</strong></td>
+
+            <td style="font-size: 18px; letter-spacing:1px; color: green;    padding: 8px;"><strong>Rs.l</strong></td>
+
+         </tr> -->
+
+
+     </tbody>
+     <tr >
+
+        <td colspan="2"  style="font-size: 18px; letter-spacing:1px; color: grey;    padding-left: 282px;"><strong>Discount</strong></td>
+
+        <td style="font-size: 16px; letter-spacing:1px; color: green;    padding-left:15px;"><strong>
+           -₹{{dis}}</strong></td>
+
+     </tr>
+     <tr>
+<!--         style="border :3px solid  rgb(255, 89, 0) "-->
+
+        <td colspan="2"  style="font-size: 18px; letter-spacing:1px; color:black;    padding-left: 280px;"><strong>Total</strong></td>
+
+        <td style="font-size: 18px; letter-spacing:1px; color: black;    padding-left: 26px;"><strong></strong>₹ {{total}}</td>
+
+     </tr>
+
+
+   </table>
+
+   <!-- <a class="btn btn-primary" href="/payment" role="button"style="background-color: blue;border-radius:4px;cursor: pointer;border:2px solid black;box-shadow: 1px 1px grey;">payment</a> -->
+
+   <!-- Button trigger modal -->
+
+
+
+
+  <!-- Button trigger modal -->
+         <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 40px 20px; padding: 23px 158px 60px;" width="80px" height="10px"  >
+                <a type="button" onclick="dateandtime()" style="background-color:#0BDA51;color:white;width:200px;height:45px"class="btn float-right mx-4 " width="120" data-bs-toggle="modal" data-bs-target="#exampleModal">Payment</a>
+            </div>
+<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color: blue;border-radius:4px;cursor: pointer;border:2px solid black;box-shadow: 1px 1px grey;">-->
+<!--    payment-->
+<!--  </button>-->
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">PAYMENT DETAILS
+
+
+
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="invoice">
+            <table cellpadding="0" cellspacing="0" >
+                <tr class="top">
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>
+                                    <h7 style="color:black;font-size:24px;"><strong>Quickcart</strong></h7>
+                                </td>
+                                <td>
+                                    <div class="row"><div class="col-md-3">Date:</div><div class="col-md-9"><p id="date1"></p></div></div>
+                                    <div class="row"><div class="col-md-3">Time:</div><div class="col-md-9"><p id="time1"></p></div></div>
+<!--                                    <div class="row">Time:<p id="time1"></p></div>-->
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="information">
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td>
+                                    {{cust.C_name}}<br>
+                                    {{cust.C_state}}<br>
+                                    {{cust.C_Email}}
+                                </td>
+                                <td>
+                                    +91{{cust.C_phone}}<br>
+                                    {{cust.C_city}}<br>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="heading">
+                    <td>
+                        Payment  Method
+                    </td>
+                    <td>
+                        Order #
+                    </td>
+                </tr>
+                <tr class="details">
+                  <td>online</td>
+                  <td>10001</td>
+                </tr>
+                <tr class="heading">
+                    <td>
+                        Item-list
+                    </td>
+                    <td>Price</td>
+                </tr>
+                {%for i in dit%}
+                <tr class="item">
+                      <td>{{i.Pname}}</td>
+                       <td>₹ {{i.P_price}}&times;{{i.P_quantity}}</td>
+                </tr>
+                {%endfor%}
+                <tr class="item">
+                      <td>Discount</td>
+                       <td>-₹ {{dis}} </td>
+                </tr>
+                <tr class="item" style="background-color:#D3D3D3;">
+                    <td>TOTAL</td>
+                    <td>₹ {{total}}</td>
+
+                </tr>
+<!--                <tr class="item">-->
+<!--                    <td>jeans</td>-->
+<!--                    <td>Rs.800</td>-->
+<!--                </tr>-->
+<!--                <tr class="item" style="border-top: #ff781f;color: #ff8b3d;">-->
+<!--                    <td>total</td>-->
+<!--                    <td>Rs.800</td>-->
+<!--                </tr>-->
+            </table>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">PAY</button>
+          <!--button type="button" class="btn btn-primary">DONE</button-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+   </div>
+            </div>
+           <div class="container col-md-4" id="cont" style="margin-top: 81px;">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>Deliver to:</h3>
+<!--                    <div class="row">-->
+                    <p><strong>{{cust.C_name}}</strong> ,&nbsp; {{cust.C_phone}}</p>
+                    <p>{{cust.C_Email}}</p>
+
+                    <p>{{cust.C_Addr1}},&nbsp;{{cust.C_city}},&nbsp;{{cust.C_state}}</p>
+<!--                    <p>{{cust.C_city}}</p>-->
+                </div>
+                <div class="col-md-4" style="padding-top:50px;">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exLabel">
+  Change<i class="bi bi-pencil"></i>
+</button>
+<!--            <button onclick="openchangeform()" style="background-color: white;width:130px;color: blue;">CHANGE<i class="bi bi-pencil"></i> </button>-->
+                </div>
+                </div>
+               <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<!-- Button trigger modal -->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">-->
+<!--  Launch demo modal-->
+<!--</button>-->
+
+<!-- Modal -->
+<div class="modal fade" id="exLabel" tabindex="-1" role="dialog" aria-labelledby="exl" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exl">Change Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/shop/change_address/">{% csrf_token%}
+            <div class="row mb-4">
+            <div class="col">
+              <div class="form-outline">
+                  <label class="form-label" for="name">First name</label>
+                <input type="text" id="name" name="name2" class="form-control" />
+
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-outline">
+                  <label class="form-label" for="phone">Phone Number</label>
+                <input type="number" id="phone" name="phone2" class="form-control" />
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+              <label class="form-label" for="cname">City name</label>
+            <input type="text" id="cname" name="city2" class="form-control" />
+
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+              <label class="form-label" for="address">Address</label>
+            <input type="text" id="address" name="address2" class="form-control input-custom" />
+
+          </div>
+
+          <!-- Email input -->
+<!--          <div class="form-outline mb-4">-->
+<!--            <input type="email" id="form7Example5" class="form-control" />-->
+<!--            <label class="form-label" for="form7Example5">Email</label>-->
+<!--          </div>-->
+
+          <!-- Number input -->
+<!--          <div class="form-outline mb-4">-->
+<!--            <input type="number" id="phone" class="form-control" />-->
+<!--            <label class="form-label" for="phone">Phone</label>-->
+<!--          </div>-->
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+        </form>
+    </div>
+        </div>
+  </div>
+</div>
+<!--        <div class="popup-overlay"></div>-->
+<!--         <div class="popup" style="top:70%;left:120px;">-->
+<!--            <button class="popup-close" onclick="closechangeform()">&times;</button>-->
+<!--            <form action="https://getbootstrap.com/docs/5.0/components/modal/#static-backdrop">-->
+<!--                <div class="header">-->
+<!--                    details-->
+<!--                </div>-->
+
+<!--            <div class="element">-->
+<!--                <label for="name">Name</label>-->
+<!--                <input type="text" id="name">-->
+<!--            </div>-->
+<!--            <div class="element">-->
+<!--                <label for="address">Address</label>-->
+<!--                <input type="text" id="address">-->
+<!--            </div>-->
+<!--            <div class="element">-->
+
+<!--                <button>done</button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--         </div>-->
+
+
+
+
+
+
+</div>
+
+
+        </div>
+
+
+
+    </div>
+
+
+    <!-- <form action="/payment">
+   <button  type="submit" class="but" style="width:60px;height:30px;font-size: 13px;font-family:lato; color: rgb(220, 50, 31); text-decoration: none;"  >confirm</button></form> -->
+
+
+<!-- Modal -->
+{%endblock%}
+{%block jss%}
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+
+   </script>
+
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+
+   </script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous">
+
+
+</script>
+
+
+<script>
+
+    function dateandtime(){
+
+    document.getElementById('time1').innerHTML=new Date().toLocaleTimeString();
+    document.getElementById('date1').innerHTML=new Date().toLocaleDateString();
+    console.log(new Date().toLocaleDateString());
+    console.log(new Date().toLocaleTimeString());
+    }
+    function openchangeform()
+    {
+
+        document.body.classList.add("showchangeform");
+
+    }
+    function closechangeform()
+    {
+        document.body.classList.remove("showchangeform");
+    }
+
+</script>
+{%endblock%}

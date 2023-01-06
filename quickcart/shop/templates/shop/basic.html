@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    {%block linkage%} {%endblock%}
     <title>{% block title %} {%endblock%}</title>
 
       <link {%block link%} {%endblock%}>
@@ -57,7 +57,7 @@
 <!-- Example single danger button -->
 
    <div class="nav-item dropdown mx-2">
-        <a class="nav-link btn btn-info dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link userbt btn btn-info dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{user}}
         </a>
         <div class="dropdown-menu my-2" style="min-width:9rem; text-align:center" aria-labelledby="navbarDropdown">
