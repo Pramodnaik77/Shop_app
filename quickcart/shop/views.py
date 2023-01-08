@@ -6,6 +6,9 @@ from math import ceil
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from datetime import date
+
+order_id = 911
 
 
 def index(request):
@@ -229,7 +232,6 @@ def search_items(request):
                 for i in range(0, len(tp)):
                     s = tp[i][1] + " " + tp[i][3] + " " + tp[i][4] + " " + str(tp[i][5])
 
-
                     if desc1.lower() in s.lower():
                         params = {'Pid': tp[i][0], 'Pname': tp[i][1], 'P_image': tp[i][2],
                                   'P_desc': tp[i][3], 'P_brand': tp[i][4], 'P_price': tp[i][5]}
@@ -251,20 +253,43 @@ def search_items(request):
 def order(request):
     m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
     cursor = m.cursor()
-
     cust = request.user.email
+    c = "select * from users where Email ='{}'".format(cust)
+    cursor.execute(c)
+    us1 = tuple(cursor.fetchall())
+    o_id = str(us1[0][6])
+    order_id = int(o_id[::-1])
+    c = "select * from orders where cust_id='{}'".format(cust, order_id)
+    cursor.execute(c)
+    us = tuple(cursor.fetchall())
+    if us == ():
+        c = "insert into orders values('{}','{}','{}','{}','{}','{}','{}',null,'{}',null)".format(order_id,
+                                                                                                  cust,
+                                                                                                  us1[0][0],
+                                                                                                  date.today(),
+                                                                                                  us1[0][6], us1[0][4],
+                                                                                                  us1[0][5],
+                                                                                                  us1[0][3])
+        cursor.execute(c)
+        m.commit()
+        c = "select * from orders where cust_id='{}'".format(cust, order_id)
+        cursor.execute(c)
+        us = tuple(cursor.fetchall())
+
+    # print(od)
     c = "select * from product p JOIN cart c on p.P_id=c.P_id and cust_id ='{}' ".format(cust)
     cursor.execute(c)
     t = tuple(cursor.fetchall())
     d = []
 
-    c = "select * from users where Email='{}'".format(cust)
-    cursor.execute(c)
-    us = tuple(cursor.fetchall())
+    # c = "select * from users where Email='{}'".format(cust)
+    # cursor.execute(c)
+    # us = tuple(cursor.fetchall())
 
     cus = us[0]
-    customer = {'C_name': cus[0].capitalize(), 'C_Email': cus[2], 'C_Addr1': cus[3], 'C_city': cus[4], 'C_state': cus[5],
-                'C_phone': cus[6]}
+    customer = {'C_name': cus[2].capitalize(), 'C_Email': cus[1], 'C_Addr1': cus[8], 'C_city': cus[5],
+                'C_state': cus[6],
+                'C_phone': cus[4]}
 
     total = 0
     if t != ():
@@ -318,9 +343,22 @@ def dec_item(request, myid):
 
 def change_address(request):
     if request.method == "POST":
+        m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+        cursor = m.cursor()
+        cust = request.user.email
         name2 = request.POST['name2']
         phone2 = request.POST['phone2']
         city2 = request.POST['city2']
         address2 = request.POST['address2']
-        print(name2, phone2, city2, address2)
+        c = "update orders set cust_id='{}',C_name='{}',ord_date='{}',C_phone='{}'," \
+            "city='{}',address='{}' where cust_id='{}'".format(
+            cust,
+            name2,
+            date.today(),
+            phone2, city2,
+            address2, cust)
+        cursor.execute(c)
+        m.commit()
+
+        # print(name2, phone2, city2, address2)
         return redirect('/shop/order')
