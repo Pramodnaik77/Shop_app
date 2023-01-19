@@ -1,0 +1,180 @@
+{% extends 'shop/basic.html' %}
+{% block title %} order history {% endblock %}
+
+{% block css%}
+    .table-box{
+        margin:50px auto;
+    }
+    .table-row{
+        display:table;
+        width: 80%;
+        margin:10px auto;
+        font-family:sans-serif;
+        background: transparent;
+        padding: 12px 0;
+        color:#555;
+        font-size: 13px;
+        box-shadow: 0 1px 4px 0 rgba(0,0,50,0.3);
+    }
+    .table-cell{
+        display:table-cell;
+        width:10%;
+        /* text-align:center; */
+        padding: 4px 0;
+        border-right:1px solid #d6d4d4;
+        vertical-align: left;
+
+        padding:10px;
+    }
+    .table-head{
+        background: #8665f7;
+        color:#fff;
+        box-shadow: none;
+        font-weight: 600;
+        text-align: left;
+
+    }
+    .table-head .table-cell{
+         border-right: none;
+        text-align: center;
+        padding: 10px;
+    }
+    .last-cell{
+        border-right: none;
+    }
+
+    ul.dropdown li{
+        display: block;
+
+    }
+    ul.dropdown {
+        display: none;
+    }
+    #desc1{
+        display:none;
+    }
+    #bdesc1{
+        display:none;
+    }
+<!--body{-->
+<!--background-color:#a9a9a9;-->
+<!--}-->
+{% endblock %}
+
+
+
+{% block body %}
+{% load static %}
+    {% if ord_exist %}
+        <br>
+        <br>
+        <div class="ord_his">
+           <b><p style="margin-left:10%;color:grey;">order history</p></b>
+        <div class="table-box">
+          <div class="table-row table-head">
+             <div class="table-cell ">
+                <p>order No.#</p>
+             </div>
+             <div class="table-cell">
+                <p>customer id</p>
+             </div>
+             <div class="table-cell my-2">
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;customer name</p>
+             </div>
+             <div class="table-cell ">
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order date</p>
+             </div>
+             <div class="table-cell ">
+                <p>&nbsp;&nbsp;&nbsp;customer phone</p>
+             </div>
+             <div class="table-cell ">
+                <p>city</p>
+             </div>
+             <div class="table-cell ">
+                <p>&nbsp;&nbsp;&nbsp;product detail</p>
+             </div>
+             <div class="table-cell">
+                <p>state</p>
+             </div>
+             <div class="table-cell ">
+                <p>total</p>
+             </div>
+             <div class="table-cell ">
+                <p>address</p>
+             </div>
+             <div class="table-cell last-cell">
+                <p>pincode</p>
+             </div>
+
+
+            </div>
+            {% for d,ord_items in dict %}
+            <div class="table-row" style="background-color:white;">
+                <div class="table-cell ">
+                   <p>{{d.ord_id}}</p>
+                </div>
+                <div class="table-cell">
+                   <p>{{d.cust_id}}</p>
+                </div>
+                <div class="table-cell">
+                   <p>{{d.c_name}}</p>
+                </div>
+                <div class="table-cell">
+                    <p>{{d.ord_date}}</p>
+                 </div>
+                 <div class="table-cell">
+                    <p>{{d.c_phone}}</p>
+                 </div>
+                 <div class="table-cell ">
+                    <p>{{d.city}}</p>
+                 </div>
+                 <div class="table-cell">
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" href="#" id="navbarDropdown" role="button" style="font-size:13px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Product list
+                            </a>
+                            <div class="dropdown-menu" style="width:488px; height:auto;" aria-labelledby="navbarDropdown">
+                                {% for prod,quantity in ord_items %}
+                                <div class="row" style="font-size:12px;">
+                                    <div class="col-md-5 mx-4">
+                                        <p>{{prod}}</p>
+                                    </div>
+                                    <div class="col-md-2 mx-4">
+                                        <p>&times;{{quantity}}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                 </div>
+                 <div class="table-cell ">
+                    <p>{{d.state}}</p>
+                 </div>
+                 <div class="table-cell ">
+                    <p>{{d.total}}</p>
+                 </div>
+                 <div class="table-cell ">
+                    <p>{{d.address}}</p>
+                 </div>
+                 <div class="table-cell last-cell">
+                    <p>560060</p>
+                 </div>
+               </div>
+            {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="container" style="padding-top:75px;">
+            <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
+                 <image src="{% static 'shop/empty-cart.png' %}" class="mx-3" width="221" height="162"></image>
+                <br>
+                <p class="empty " style="font-size:20px">You have not ordered any items!</p>
+                <p class="empty" style="font-size:14px;padding-left:80px;">Order now!!!</p>
+                <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
+            </div>
+        </div>
+
+    {%endif%}
+
+
+{% endblock %}

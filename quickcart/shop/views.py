@@ -7,8 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from datetime import date
-
-order_id = 911
+from django.http import HttpResponseRedirect
 
 
 def index(request):
@@ -48,7 +47,6 @@ def index(request):
 
 
 def register(request):
-    # messages.success(request, "Welcome!! This is registration page")
     if request.method == "POST":
         name = request.POST.get('name', '')
         password = request.POST.get('password', '')
@@ -128,13 +126,32 @@ def prod_view(request, myid):
     c = "select * from product where P_id='{}'".format(myid)
     cursor.execute(c)
     t = tuple(cursor.fetchall())
-    # d = []
     d = {}
     for i in range(0, 1):
         d = {'Pid': t[i][0], 'Pname': t[i][1], 'P_image': t[i][2], 'P_desc': t[i][3],
              'P_brand': t[i][4], 'P_price': t[i][5]}
+    l = []
+    rev = {}
+    if request.user.is_authenticated:
+        cust = request.user.email
+        c = "select * from cart where cust_id='{}'".format(cust)
+        cursor.execute(c)
+        t = tuple(cursor.fetchall())
 
-    return render(request, 'prodview.html', {'dict': d})
+        for i in range(len(t)):
+            l.append(t[i][1])
+
+        c = "select * from reviews where cust_id='{}' and prod_id='{}'".format(cust, myid)
+        cursor.execute(c)
+        top_rev = tuple(cursor.fetchall())
+        if top_rev != ():
+            r_exist = True
+            for i in range(len(top_rev)):
+                rev = {'P_name': top_rev[0][1], 'P_desc': top_rev[0][2], 'P_star': top_rev[0][3]}
+        else:
+            r_exist = False
+
+    return render(request, 'prodview.html', {'dict': d, 'len': l, 'rev': rev, 'r_exist': r_exist, 'range': range(0, 5)})
 
 
 def cart(request, myid):
@@ -210,10 +227,8 @@ def remove(request, myid):
 def search_items(request):
     if request.method == 'POST':
         desc1 = request.POST['desc1']
-        # desc1 = desc1.lower()
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
         cursor = m.cursor()
-
         q = "select * from category"
         cursor.execute(q)
         allprods = []
@@ -230,7 +245,7 @@ def search_items(request):
                 s = " "
                 dit = []
                 for i in range(0, len(tp)):
-                    s = tp[i][1] + " " + tp[i][3] + " " + tp[i][4] + " " + str(tp[i][5])
+                    s = tp[i][1] + " " + tp[i][3] + " " + tp[i][4] + " " + str(tp[i][5]) + " " + t[j][1]
 
                     if desc1.lower() in s.lower():
                         params = {'Pid': tp[i][0], 'Pname': tp[i][1], 'P_image': tp[i][2],
@@ -257,39 +272,33 @@ def order(request):
     c = "select * from users where Email ='{}'".format(cust)
     cursor.execute(c)
     us1 = tuple(cursor.fetchall())
-    o_id = str(us1[0][6])
-    order_id = int(o_id[::-1])
-    c = "select * from orders where cust_id='{}'".format(cust, order_id)
+
+    c = "select * from orders where cust_id='{}'".format(cust)
+
     cursor.execute(c)
     us = tuple(cursor.fetchall())
     if us == ():
-        c = "insert into orders values('{}','{}','{}','{}','{}','{}','{}',null,'{}',null)".format(order_id,
-                                                                                                  cust,
-                                                                                                  us1[0][0],
-                                                                                                  date.today(),
-                                                                                                  us1[0][6], us1[0][4],
-                                                                                                  us1[0][5],
-                                                                                                  us1[0][3])
+        c = "insert into orders(cust_id,C_name,ord_date,C_phone,city,state,address)" \
+            " values('{}','{}',sysdate(),'{}','{}','{}','{}')".format(cust,
+                                                                      us1[0][0],
+                                                                      us1[0][6], us1[0][4],
+                                                                      us1[0][5],
+                                                                      us1[0][3])
         cursor.execute(c)
         m.commit()
-        c = "select * from orders where cust_id='{}'".format(cust, order_id)
+        c = "select * from orders where cust_id='{}'".format(cust)
         cursor.execute(c)
         us = tuple(cursor.fetchall())
 
-    # print(od)
     c = "select * from product p JOIN cart c on p.P_id=c.P_id and cust_id ='{}' ".format(cust)
     cursor.execute(c)
     t = tuple(cursor.fetchall())
     d = []
 
-    # c = "select * from users where Email='{}'".format(cust)
-    # cursor.execute(c)
-    # us = tuple(cursor.fetchall())
-
     cus = us[0]
     customer = {'C_name': cus[2].capitalize(), 'C_Email': cus[1], 'C_Addr1': cus[8], 'C_city': cus[5],
                 'C_state': cus[6],
-                'C_phone': cus[4]}
+                'C_phone': cus[4], 'ord_id': cus[0]}
 
     total = 0
     if t != ():
@@ -303,7 +312,9 @@ def order(request):
         total = total - 100
     else:
         dis = 0
-
+    c = "update orders set total='{}'where cust_id='{}'".format(total, cust)
+    cursor.execute(c)
+    m.commit()
     return render(request, 'order.html', {'dit': d, 'total': total, 'dis': dis, 'cust': customer})
 
 
@@ -336,8 +347,6 @@ def dec_item(request, myid):
         c = "update cart set quantity='{}' where P_id='{}' and cust_id='{}'".format(quantity, myid, cust)
         cursor.execute(c)
         m.commit()
-    # else:
-    #     messages.error(request, "")
     return redirect('/shop/cart/9481')
 
 
@@ -351,14 +360,106 @@ def change_address(request):
         city2 = request.POST['city2']
         address2 = request.POST['address2']
         c = "update orders set cust_id='{}',C_name='{}',ord_date='{}',C_phone='{}'," \
-            "city='{}',address='{}' where cust_id='{}'".format(
-            cust,
-            name2,
-            date.today(),
-            phone2, city2,
-            address2, cust)
+            "city='{}',address='{}' where cust_id='{}'".format(cust,
+                                                               name2,
+                                                               date.today(),
+                                                               phone2, city2,
+                                                               address2, cust)
         cursor.execute(c)
         m.commit()
-
-        # print(name2, phone2, city2, address2)
         return redirect('/shop/order')
+
+
+def order_complete(request):
+    messages.success(request, "Order placed successfully")
+    us = request.user.email
+    m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+    cursor = m.cursor()
+    c = "select ord_id from orders where cust_id='{}'".format(us)
+    cursor.execute(c)
+    l = cursor.fetchall()
+    ord_id = l[0][0]
+    c = "insert into order_items SELECT '{}',P_id,quantity from cart where cust_id = '{}' ".format(ord_id, us)
+    cursor.execute(c)
+    c = "delete from cart where cust_id = '{}'".format(us)
+    cursor.execute(c)
+    c = "delete from orders where cust_id='{}'".format(us)
+    cursor.execute(c)
+    m.commit()
+
+    return redirect('/shop')
+
+
+def buy_now(request, myid):
+    if request.user.is_authenticated:
+
+        m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+        cursor = m.cursor()
+        cust = request.user.email
+        c = "select * from cart where P_id='{}' and cust_id='{}'".format(myid, cust)
+        cursor.execute(c)
+        pd = tuple(cursor.fetchall())
+        if pd == ():
+            c = "select * from product where P_id='{}'".format(myid)
+            cursor.execute(c)
+            t = tuple(cursor.fetchall())
+            d = {}
+            c = "insert into cart values ('{}','{}','{}')".format(cust, t[0][0], 1)
+            cursor.execute(c)
+            m.commit()
+
+        return redirect('/shop/cart/9481')
+    else:
+        messages.error(request, "Login to Buy items")
+        return redirect('/shop')
+
+
+def review_star(request, myid):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+            cursor = m.cursor()
+            cust = request.user.email
+            rev_desc = request.POST['rev_desc']
+            rev_star = request.POST['rev_star']
+            us_name = request.user.username
+            c = "insert into reviews values('{}','{}','{}','{}',null,'{}')".format(cust, us_name,
+                                                                                   rev_desc, rev_star, myid)
+            cursor.execute(c)
+            m.commit()
+
+            return redirect('/shop/prodview/' + str(myid))
+
+        messages.error(request, "Login to add reviews")
+        return redirect('/shop')
+
+
+def order_history(request):
+    if request.user.is_authenticated:
+        m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+        cursor = m.cursor()
+        cust = request.user.email
+        c = "select * from order_history where cust_id='{}'".format(cust)
+        cursor.execute(c)
+        t = tuple(cursor.fetchall())
+        dit = []
+        item_ordered = False
+        if t != ():
+            item_ordered = True
+
+            add = 0
+            for tup in t:
+                tup[0]
+                params = {'ord_id': tup[0], 'cust_id': tup[1], 'c_name': tup[2], 'ord_date': tup[3], 'c_phone': tup[4],
+                          'city': tup[5], 'state': tup[6], 'total': tup[7], 'address': tup[8], 'pincode': tup[9]}
+                c = "select p.P_name,o.quantity from order_items o, product p where " \
+                    "o.ord_id='{}' and p.P_id = o.P_id".format(tup[0])
+                cursor.execute(c)
+                prod = cursor.fetchall()
+                ord_item = []
+                for p in prod:
+                    ord_item.append([p[0], p[1]])
+                dit.append([params, ord_item])
+        return render(request, 'order_history.html', {'dict': dit, 'ord_exist': item_ordered})
+    messages.error(request, "Login to view your order history!!!!")
+    return redirect('/shop')

@@ -381,7 +381,7 @@ display:none;
                 </tr>
                 <tr class="details">
                   <td>online</td>
-                  <td>10001</td>
+                  <td>{{cust.ord_id}}</td>
                 </tr>
                 <tr class="heading">
                     <td>
@@ -417,7 +417,7 @@ display:none;
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">PAY</button>
+          <a href="/shop/order_complete"><button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">PAY</button></a>
           <!--button type="button" class="btn btn-primary">DONE</button-->
         </div>
       </div>
@@ -469,14 +469,14 @@ display:none;
             <div class="col">
               <div class="form-outline">
                   <label class="form-label" for="name">First name</label>
-                <input type="text" id="name" name="name2" class="form-control" />
+                <input type="text" id="name" name="name2" class="form-control" required/>
 
               </div>
             </div>
             <div class="col">
               <div class="form-outline">
                   <label class="form-label" for="phone">Phone Number</label>
-                <input type="number" id="phone" name="phone2" class="form-control" />
+                <input type="number" id="phone" name="phone2" class="form-control" required />
 
               </div>
             </div>
@@ -485,14 +485,14 @@ display:none;
           <!-- Text input -->
           <div class="form-outline mb-4">
               <label class="form-label" for="cname">City name</label>
-            <input type="text" id="cname" name="city2" class="form-control" />
+            <input type="text" id="cname" name="city2" class="form-control" required/>
 
           </div>
 
           <!-- Text input -->
           <div class="form-outline mb-4">
               <label class="form-label" for="address">Address</label>
-            <input type="text" id="address" name="address2" class="form-control input-custom" />
+            <input type="text" id="address" name="address2" class="form-control input-custom" required />
 
           </div>
 

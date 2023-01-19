@@ -1,11 +1,102 @@
 {% extends 'shop/basic.html' %}
 {% block title %} Product view {% endblock %}
+{%block linkage%}
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c8e4d183c2.js" crossorigin="anonymous"></script>
+{%endblock%}
+{% block css%}
+.checked {
+    color: orange;
 
+}
+#test{
+  margin-top: 30px;
+  text-decoration: none;
+  padding:0px;
+  font-family:poppins;
+  display: flex;
+  flex-direction: column;
+
+}
+.test-box-container{
+  display:flex;
+
+  align-items: center;
+  flex-wrap: wrap;
+  width: 620px;
+
+}
+.test-box{
+  width: 800px;
+  box-shadow: 2px 2px 30px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  padding:20px;
+  margin:15px;
+  cursor:pointer;
+
+}
+.profile-img{
+height: 50px;
+width: 50px;
+border-radius: 50%;
+overflow: hidden;
+margin-right: 10px;
+
+}
+.profile-img img{
+  width: 100%;
+  height:100%;
+  object-fit: cover;
+  object-position: center;
+}
+.profile{
+  display: flex;
+  align-items:center;
+}
+.name-user{
+  display:flex;
+  flex-direction: column;
+}
+.name-user strong{
+  color:#3d3d3d;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+
+}
+.name-user span{
+  color:#979797;
+  font-size: 1.2rem;
+
+}
+.reviews{
+  color:#f9d71c;
+}
+.box-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.comment p{
+color:#4b4b4b;
+}
+.test-box:hover{
+  transform: translateY(-10px);
+  transition: all ease 0.3s;
+}
+
+
+{% endblock %}
 {% block body%}
 {% load static %}
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
 <!--            <div class="row my-3">-->
 <!--                <image src="{% static dict.P_image %} " width="290" height="310"></image>-->
 <!--            </div>-->
@@ -16,9 +107,18 @@
             <div class="card my-4" style="width: 20rem; height:25rem;">
               <image src="{% static dict.P_image %} " class=" my-4 mx-4" width="250" height="270"></image>
               <div class="card-body">
-                  <div class="row mx-2">
-                      <a href="#" class="btn btn-primary btn-sm mx-4">Buy Now</a>
-                      <a href="#" class="btn btn-primary btn-sm mx-3">Add To Cart</a>
+                  <div class="row mx-3" >
+<!--                      <div class="col-md-5">-->
+                        <a href="/shop/buy_now/{{dict.Pid}}" class="btn btn-primary btn-sm mx-4">Buy Now</a>
+<!--                      </div>-->
+<!--                      <div class="col-md-5">-->
+                          {%if dict.Pid in len%}
+                                <a href="/shop/remove/{{dict.Pid}}"><button type="button" class="btn btn-primary btn-sm  cart" id = "{{dict.Pid}}" onclick="Remove_from_the_cart('{{dict.Pname}}','{{user.is_authenticated}}')"> Remove </button></a>
+                          {%else%}
+                             <a href="/shop/cart/{{dict.Pid}}"><button type="button" class="btn btn-primary btn-sm cart" onclick="Add_to_cart('{{dict.Pname}}','{{user.is_authenticated}}')"><span id="cart{{i.Pid}}">Add to cart</span></button></a>
+                          {%endif%}
+<!--                      </div>-->
+<!--                      <a href="/shop/cart/{{dict.Pid}}" class="btn btn-primary btn-sm mx-3">Add To Cart</a>-->
                   </div>
 <!--                    <h5 class="card-title">Card title</h5>-->
 <!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
@@ -26,10 +126,91 @@
               </div>
             </div>
         </div>
-        <div class="col-md-8 my-4">
+        <div class="col-md-5 my-4">
             <b><p>{{dict.Pname}}</p></b>
             <b><p>RS.{{dict.P_price}}</p></b>
             <p>{{dict.P_desc}}</p>
+            <br>
+            <br>
+            <div style="padding-top:125px;"></div>
+            <h5>Reviews & Ratings</h5>
+            <br>
+            {% if r_exist %}
+                <div class="test-box-container">
+                       <div class="test-box">
+                        <div class="box-top">
+                          <div class="profile">
+                              <div class="name-user">
+                                  <b><p style="font-size:21px;">{{rev.P_name}}</p></b>
+                                <span style="font-size:12px;">@{{rev.P_name}}</span>
+                              </div>
+                          </div>
+                          <div class="reviews">
+                              {% for i in range%}
+                                    {% if i < rev.P_star %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                              {% endfor %}
+<!--                             <i class="fas fa-star"></i>-->
+<!--                             <i class="fas fa-star"></i>-->
+<!--                             <i class="fas fa-star"></i>-->
+                          </div>
+                        </div>
+                        <div class="comment">
+                          <p>{{rev.P_desc}}</p>
+                        </div>
+                       </div>
+                    </div>
+
+            {%else%}
+            <form method="post" id="reviews">{% csrf_token %}
+<!--            <div>-->
+                    <span  onmouseover="starmark(this)" onclick="starmark(this)" id="1one" style="font-size:20px;cursor:pointer;"  class="fa fa-star checked"></span>
+                    <span onmouseover="starmark(this)" onclick="starmark(this)" id="2one"  style="font-size:20px;cursor:pointer;" class="fa fa-star "></span>
+                    <span onmouseover="starmark(this)" onclick="starmark(this)" id="3one"  style="font-size:20px;cursor:pointer;" class="fa fa-star "></span>
+                    <span onmouseover="starmark(this)" onclick="starmark(this)" id="4one"  style="font-size:20px;cursor:pointer;" class="fa fa-star"></span>
+                    <span onmouseover="starmark(this)" onclick="starmark(this)" id="5one"  style="font-size:20px;cursor:pointer;" class="fa fa-star"></span>
+                    <br/>
+                <input type="hidden" id="rev_star" name="rev_star"/>
+                    <textarea  style="margin-top:5px;width:620px;height: 101px; resize: none;" class="form-control" name="rev_desc" id="rev_desc" rows="3" id="comment" placeholder="Enter your review" required></textarea>
+
+                    <button onclick="reviews_update('{{dict.Pid}}')" type="submit" style="margin-top:10px;margin-left:5px;" class="btn btn-sm btn-success">Submit</button>
+<!--            </div>-->
+            </form>
+            {%endif%}
+            <div id="test">
+                    <div class="test-heading">
+                        <span><strong><h4>Top Review
+                        </h4></strong></span>
+                    </div>
+                    <div class="test-box-container">
+                       <div class="test-box">
+                        <div class="box-top">
+                          <div class="profile">
+                              <!-- <div class="profile-img">
+                                <img src="https://static.toiimg.com/thumb/msid-51889276,width-50,height-50,resizemode-75/51889276.jpg" alt="not">
+                              </div> -->
+                              <div class="name-user">
+                                <strong>nishanth c</strong>
+                                <span>@nishu</span>
+                              </div>
+                          </div>
+                          <div class="reviews">
+                             <i class="fas fa-star"></i>
+                             <i class="fas fa-star"></i>
+                             <i class="fas fa-star"></i>
+                             <i class="fas fa-star"></i>
+                             <i class="far fa-star"></i>
+                          </div>
+                        </div>
+                        <div class="comment">
+                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos provident repellendus, maxime atque laboriosam cupiditate. Culpa natus maxime neque asperiores sit impedit? Dolore, amet vitae.</p>
+                        </div>
+                       </div>
+                    </div>
+                    </div>
         </div>
     </div>
 </div>
@@ -38,3 +219,50 @@
 
 
 {% endblock %}
+
+
+{%block jss%}
+<script>
+
+      function Add_to_cart(Pname,val) {
+      if(val == 'True'){
+            alert(Pname+" added to cart successfully")
+        }
+
+      }
+
+      function Remove_from_the_cart(Pname,stat) {
+        alert(Pname+" removed from cart!!!")
+
+      }
+    var count = 1;
+
+    function starmark(item)
+    {
+        count=item.id[0];
+        sessionStorage.starRating = count;
+        var subid= item.id.substring(1);
+        for(var i=0;i<5;i++)
+        {
+            if(i<count)
+            {
+                document.getElementById((i+1)+subid).style.color="orange";
+            }
+            else
+            {
+                document.getElementById((i+1)+subid).style.color="black";
+            }
+        }
+
+    }
+
+
+    function reviews_update(P_id)
+    {
+        document.getElementById("rev_star").value = count;
+<!--        l =  document.getElementById("rev_star").value-->
+<!--        console.log(l)-->
+        document.getElementById("reviews").action ='/shop/review_star/'+P_id;
+    }
+  </script>
+ {% endblock %}

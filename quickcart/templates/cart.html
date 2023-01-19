@@ -93,7 +93,7 @@ padding: 2px 24px;
 
 {%load static%}
 
-<div class="container">
+
 
 <!--        <div class="card my-4" style="width: 20rem; height:25rem;">-->
 <!--              <image src="{% static 'shop/empty-cart.png' %} "></image>-->
@@ -105,6 +105,7 @@ padding: 2px 24px;
 
     {%if user.is_authenticated%}
          {%if len == 0%}
+        <div class="container" style="padding-top:75px;">
         <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
              <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
             <br>
@@ -113,6 +114,7 @@ padding: 2px 24px;
             <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
         </div>
         {%else%}
+    <div class="container">
         <div class="row py-5">
 <!--        <b><p class="length my-4">Total products in the cart: {{len}}</p></b>-->
         <div class="col-md-8" >
