@@ -9,7 +9,7 @@
 
 {%block css%}
 .demo{
-width:589px;
+    width:589px;
 }
     .table-content{
        /*border-collapse: collapse;
@@ -39,8 +39,6 @@ width:589px;
         color:white;
         text-align: left;
         font-weight: bold;
-
-
     }
     .table-content th,
     .table-content td{
@@ -63,16 +61,13 @@ width:589px;
     }
     a:hover{
         color: #dddddd;
-
     }
 <!--    a:visited{-->
 <!--        background-color: orange;-->
 <!--    }-->
-
 .userbt{
-padding:7px 10px;
-border-radius:5px 5px;
-
+    padding:7px 10px;
+    border-radius:5px 5px;
 }
     .invoice{
         max-width:800px;
@@ -125,23 +120,21 @@ border-radius:5px 5px;
         margin: 60px;
         width: 565px;
         height: 225px;
-    margin-left: 120px;
-    padding-top: 38px;
-    padding-left: 48px;
-    box-shadow: rgb(0 0 0/25%) 0px 1px 1px 3px;
-<!--    box-shadow: 0 0 10px rgba(231, 5, 39, 0.995);-->
-    display: inline-block;
+        margin-left: 120px;
+        padding-top: 38px;
+        padding-left: 48px;
+        box-shadow: rgb(0 0 0/25%) 0px 1px 1px 3px;
+
+        display: inline-block;
     }
     body{
-      font-family: "raleway";
+      font-family: "segoe ui";
     }
-
-
 .center{
-  position: absolute;
-  /* top:50%;
-  left:50%; */
-  transform:translate(-50%,-50%);
+      position: absolute;
+      /* top:50%;
+      left:50%; */
+      transform:translate(-50%,-50%);
 }
 
 .popup-overlay{
@@ -483,12 +476,17 @@ display:none;
           </div>
 
           <!-- Text input -->
-          <div class="form-outline mb-4">
+            <div class="row">
+          <div class="form-outline col-md-8">
               <label class="form-label" for="cname">City name</label>
             <input type="text" id="cname" name="city2" class="form-control" required/>
 
           </div>
-
+         <div class="form-group col-md-4">
+          <label for="pincode">Pincode</label>
+          <input type="text" class="form-control" id="pincode2" name="pincode2">
+        </div>
+            </div>
           <!-- Text input -->
           <div class="form-outline mb-4">
               <label class="form-label" for="address">Address</label>

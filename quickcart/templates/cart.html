@@ -106,12 +106,13 @@ padding: 2px 24px;
     {%if user.is_authenticated%}
          {%if len == 0%}
         <div class="container" style="padding-top:75px;">
-        <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
-             <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
-            <br>
-            <p class="empty px-5 py-3" style="font-size:20px">Your cart is empty!</p>
-            <p class="empty px-5" style="font-size:14px">Add items to it now.</p>
-            <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
+            <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
+                <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
+                <br>
+                <p class="empty px-5 py-3" style="font-size:20px">Your cart is empty!</p>
+                <p class="empty px-5" style="font-size:14px">Add items to it now.</p>
+                <a href="/shop"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Shop now</button></a>
+            </div>
         </div>
         {%else%}
     <div class="container">
@@ -192,24 +193,20 @@ padding: 2px 24px;
                         </div>
                     </div>
                 </div>
-<!--                <div class="demo3" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px;">-->
-<!--                <p class="p_d">You will save ₹803 on this order</p>-->
-<!--                </div>-->
                 <p class="ok">You will save ₹100 on this order</p>
-<!--
-               <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 300px 1px 0px;width:100px;">-->
-<!--                    <div>-->
             </div>
             </div>
             {%endif%}
         {%else%}
-              <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 1px; padding: 90px 332px 80px;width:1000px;height:500px;">
-               <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
-                <br>
-                <p class="empty px-5 py-3" style="font-size:20px">Signin to add items!!!</p>
-    <!--            <p class="empty px-5" style="font-size:14px">Add items to it now.</p>-->
-                <a href="/shop/login_check"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Log in</button></a>
+           <div class="container" style="padding-top:75px;">
+                <div class="demo" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px 2px; padding: 90px 332px 80px;width:1000px;height:500px;">
+                    <image src="{% static 'shop/empty-cart.png' %} " class="mx-3" width="221" height="162"></image>
+                    <br>
+                    <p class="empty px-5 py-3" style="font-size:20px">Signin to add items!!!</p>
+                    <a href="/shop/login_check"><button type="button" style="background-color:blue;color:white;width:200px;height:45px"class="btn mx-4 my-4 " width="120">Log in</button></a>
                 </div>
+            </div>
+
         {% endif %}
 
 </div>

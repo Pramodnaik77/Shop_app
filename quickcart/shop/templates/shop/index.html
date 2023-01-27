@@ -44,7 +44,17 @@
       }
     .card-img, .card-img-bottom, .card-img-top {
     width: 80%;
-}
+    }
+    body{
+        background-color:#E5E4E2;
+    }
+<!--    .cart_quantity{-->
+<!--        display:none;-->
+<!--    }-->
+<!--    .cart_quantity:after{-->
+<!--        content: "{{qu}}";-->
+<!--    }-->
+
 {% endblock %}
 
 {%block body %}
@@ -62,8 +72,6 @@
     </div>
 {%endfor%}
 <div class="container py-4">
-
-
 <!--    <image src="{% static P_image %} " width="200" height="200"></image>-->
 <!--    <div class="row">-->
 <!--        {% for i in dit %}-->
@@ -129,27 +137,27 @@
                 <span class="carousel-control-next-icon"></span>
             </a>
         </div>
+    <div style="padding-top:50px;"></div>
         {%endfor%}
 </div>
-
-
 
 {% endblock %}
 {%block jss%}
 <script>
+      function quantity(quant){
+            document.getElementById("cart_quantity").innerHTML = 12;
+            console.log("ehllo");
+      }
 
       function Add_to_cart(Pname,val) {
       if(val == 'True'){
             alert(Pname+" added to cart successfully")
         }
-
       }
-
       function Remove_from_the_cart(Pname,stat) {
         alert(Pname+" removed from cart!!!")
 
       }
-
 
   </script>
  {% endblock %}

@@ -19,5 +19,14 @@ def index(request):
         "end"
     cursor.execute(c)
     m.commit()
+
+    c = "create procedure IF NOT EXISTS remove_from_cart(in cust_id varchar(200),in P_id int)" \
+        " begin" \
+        " delete from cart where cart.cust_id = cust_id and cart.P_id = P_id; " \
+        "end"
+    cursor.execute(c)
+
+    c = "create procedure IF NOT EXISTS delete_cart(in cust_id varchar(30)) begin delete from orders  where orders.cust_id  = cust_id ; delete from cart where cart.cust_id = cust_id ;end"
+    cursor.execute(c)
     return render(request, 'home.html')
 

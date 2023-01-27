@@ -1,0 +1,94 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
+
+<!--</head>-->
+{% extends 'shop/basic.html' %}
+{% block title %} ADMIN{% endblock %}
+{% block css %}
+    body{
+        background-color:#E5E4E2;
+    }
+    .dec{
+        resize:none;
+    }
+    #desc1{
+        display:none;
+    }
+    #bdesc1{
+        display:none;
+    }
+
+
+
+{% endblock %}
+
+
+{% block body %}
+<!--<form method='post' action="/shop/admin_page/" enctype="multipart/form-data">{% csrf_token %}-->
+<!--  <input type="file" id="myFile" name="filename">-->
+<!--  <input type="submit">-->
+<!--</form>-->
+
+    <div class="container my-4">
+        <div class="adimin_p" style="background-color:grey; width:250px;height:30px;text-align:center;">
+        <b><p>This is admin page</p></b>
+        </div>
+        <div class="my-4"></div>
+        <form action="/shop/admin_page/"  method="post" enctype="multipart/form-data"
+                      class="form-horizontal">
+            <div class="row my-2">
+                <div class="col-md-5">
+                  <label for="Pid">Product id</label>
+                  <input type="number" class="form-control" id="Pid" name="Pid"  placeholder="Enter Product id"required>
+                </div>
+                <div class="col-md-5">
+                  <label for="Pname">Product Name</label>
+                  <input type="text" class="form-control" id="Pname" name="Pname"  placeholder="Enter Product name"required>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-md-5">
+                  <label for="Price">Price</label>
+                  <input type="number" class="form-control" id="Price" name="Price"  placeholder="Enter Product price"required>
+                </div>
+                <div class="col-md-5">
+                  <label for="P_brand">Product Brand</label>
+                  <input type="text" class="form-control" id="P_brand" name="P_brand"  placeholder="Enter Product brand"required>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-md-5">
+                  <label for="cat_id">Category id</label>
+                  <input type="number" class="form-control" id="cat_id" name="cat_id" placeholder="Enter cat id"required>
+                </div>
+                <div class="col-md-5">
+                  <label for="quantity">Quantity</label>
+                  <input type="number" class="form-control" id="quantity" name="quantity"  placeholder="Enter quantity"required>
+                </div>
+            </div>
+
+          <div class="my-3">
+                <label for="desc">Enter Product Details</label>
+                <textarea class="form-control dec" id="desc" name="desc" rows="3"  style="width:920px; height:150px;"required></textarea>
+          </div>
+            <div class="row my-1">
+                <div class="my-3 mx-4">
+                        {% csrf_token %}
+                        <label for="cat_id">Product Image</label>
+                        <input type="file" name="image" class="form-control" style="height:42px;" required>
+                        <input type="submit" value="Upload" class="btn btn-primary btn-sm my-4">
+
+                </div>
+            </div>
+        </form>
+      </div>
+
+<!--{% load static %}-->
+<!--<image src="{% static '/shop/uploads/kart.png' %}" >hello</image>-->
+{% endblock %}

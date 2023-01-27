@@ -21,4 +21,5 @@ urlpatterns = [
     path('buy_now/<int:myid>', views.buy_now, name="buy_now"),
     path('review_star/<int:myid>', views.review_star, name="review_star"),
     path('order_history', views.order_history, name="order_history"),
+    path('admin_page/', views.admin_page, name="admin_page"),
 ]

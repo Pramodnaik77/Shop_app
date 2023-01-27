@@ -164,6 +164,7 @@ color:#4b4b4b;
             {%else%}
             <form method="post" id="reviews">{% csrf_token %}
 <!--            <div>-->
+<!--                <p>Your review</p>-->
                     <span  onmouseover="starmark(this)" onclick="starmark(this)" id="1one" style="font-size:20px;cursor:pointer;"  class="fa fa-star checked"></span>
                     <span onmouseover="starmark(this)" onclick="starmark(this)" id="2one"  style="font-size:20px;cursor:pointer;" class="fa fa-star "></span>
                     <span onmouseover="starmark(this)" onclick="starmark(this)" id="3one"  style="font-size:20px;cursor:pointer;" class="fa fa-star "></span>
@@ -182,6 +183,44 @@ color:#4b4b4b;
                         <span><strong><h4>Other Reviews
                         </h4></strong></span>
                     </div>
+                {%if oth_exist %}
+                    {% for rat in oth_rev %}
+                        <div class="test-box-container">
+                           <div class="test-box">
+                            <div class="box-top">
+                              <div class="profile">
+                                  <!-- <div class="profile-img">
+                                    <img src="https://static.toiimg.com/thumb/msid-51889276,width-50,height-50,resizemode-75/51889276.jpg" alt="not">
+                                  </div> -->
+                                  <div class="name-user">
+                                    <strong>{{rat.P_name}}</strong>
+                                    <span>@{{rat.P_name}}</span>
+                                  </div>
+                              </div>
+                            <div class="reviews">
+                              {% for i in range%}
+                                    {% if i < rat.P_star %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                              {% endfor %}
+                            </div>
+<!--                              <div class="reviews">-->
+<!--                                 <i class="fas fa-star"></i>-->
+<!--                                 <i class="fas fa-star"></i>-->
+<!--                                 <i class="fas fa-star"></i>-->
+<!--                                 <i class="fas fa-star"></i>-->
+<!--                                 <i class="far fa-star"></i>-->
+<!--                              </div>-->
+                            </div>
+                            <div class="comment">
+                              <p>{{rat.P_desc|slice:"0:160"}}...</p>
+                            </div>
+                           </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
                     <div class="test-box-container">
                        <div class="test-box">
                         <div class="box-top">
@@ -207,7 +246,9 @@ color:#4b4b4b;
                         </div>
                        </div>
                     </div>
-                    </div>
+                {% endif%}
+
+                </div>
         </div>
     </div>
 </div>
@@ -257,8 +298,6 @@ color:#4b4b4b;
     function reviews_update(P_id)
     {
         document.getElementById("rev_star").value = count;
-<!--        l =  document.getElementById("rev_star").value-->
-<!--        console.log(l)-->
         document.getElementById("reviews").action ='/shop/review_star/'+P_id;
     }
   </script>

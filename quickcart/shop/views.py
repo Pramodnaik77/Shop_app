@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from datetime import date
 from django.http import HttpResponseRedirect
+import shutil
+from .models import ImageModel
 
 
 def index(request):
@@ -55,6 +57,7 @@ def register(request):
         adrs = request.POST.get('address', '')
         city = request.POST.get('city', '')
         state = request.POST.get('state', '')
+        pincode = request.POST.get('pincode', '')
         user = User.objects.create_user(name, email, password)
         user.save()
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
@@ -66,9 +69,9 @@ def register(request):
         if p != ():
             messages.error(request, 'Email already exists')
             return redirect('/shop/register')
-        c = "insert into users values ( '{}','{}','{}','{}','{}','{}','{}' )".format(name, password, email, adrs,
-                                                                                     city,
-                                                                                     state, phone)
+        c = "insert into users values ( '{}','{}','{}','{}','{}','{}','{}','{}' )".format(name, password, email, adrs,
+                                                                                          city,
+                                                                                          state, phone, pincode)
         cursor.execute(c)
         m.commit()
         messages.success(request, 'Registration successful')
@@ -141,9 +144,26 @@ def prod_view(request, myid):
         for i in range(len(t)):
             l.append(t[i][1])
 
-        c = "select * from reviews where cust_id='{}' and prod_id='{}'".format(cust, myid)
+        c = "select * from reviews where cust_id='{}' and prod_id ='{}'".format(cust, myid)
         cursor.execute(c)
         top_rev = tuple(cursor.fetchall())
+        c = "select * from reviews where prod_id='{}' and cust_id != '{}'".format(myid, cust)
+        cursor.execute(c)
+        other_rev = tuple(cursor.fetchall())
+        # print(other_rev)
+        i = 0
+        oth_rev = []
+        oth_exist = False
+        if other_rev != ():
+            oth_exist = True
+            for rat in other_rev:
+                if i < 2:
+                    rev = {'P_name': other_rev[i][1], 'P_desc': other_rev[i][2], 'P_star': other_rev[i][3]}
+                    oth_rev.append(rev)
+                else:
+                    break
+                i += 1
+        # print(oth_rev)
         if top_rev != ():
             r_exist = True
             for i in range(len(top_rev)):
@@ -151,7 +171,8 @@ def prod_view(request, myid):
         else:
             r_exist = False
 
-    return render(request, 'prodview.html', {'dict': d, 'len': l, 'rev': rev, 'r_exist': r_exist, 'range': range(0, 5)})
+    return render(request, 'prodview.html', {'dict': d, 'len': l, 'rev': rev, 'r_exist': r_exist,
+                                             'range': range(0, 5), 'oth_exist': oth_exist, 'oth_rev': oth_rev})
 
 
 def cart(request, myid):
@@ -217,7 +238,9 @@ def remove(request, myid):
     m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
     cursor = m.cursor()
     cust = request.user.email
-    c = "delete from cart where P_id='{}' and cust_id='{}'".format(myid, cust)
+    # c = "delete from cart where P_id='{}' and cust_id='{}'".format(myid, cust)
+    # cursor.execute(c)
+    c = "call remove_from_cart('{}','{}')".format(cust, myid)
     cursor.execute(c)
     m.commit()
 
@@ -277,13 +300,14 @@ def order(request):
 
     cursor.execute(c)
     us = tuple(cursor.fetchall())
+    print(us1)
     if us == ():
-        c = "insert into orders(cust_id,C_name,ord_date,C_phone,city,state,address)" \
-            " values('{}','{}',sysdate(),'{}','{}','{}','{}')".format(cust,
-                                                                      us1[0][0],
-                                                                      us1[0][6], us1[0][4],
-                                                                      us1[0][5],
-                                                                      us1[0][3])
+        c = "insert into orders(cust_id,C_name,ord_date,C_phone,city,state,address,pincode)" \
+            " values('{}','{}',sysdate(),'{}','{}','{}','{}','{}')".format(cust,
+                                                                           us1[0][0],
+                                                                           us1[0][6], us1[0][4],
+                                                                           us1[0][5],
+                                                                           us1[0][3], us1[0][7])
         cursor.execute(c)
         m.commit()
         c = "select * from orders where cust_id='{}'".format(cust)
@@ -315,7 +339,8 @@ def order(request):
     c = "update orders set total='{}'where cust_id='{}'".format(total, cust)
     cursor.execute(c)
     m.commit()
-    return render(request, 'order.html', {'dit': d, 'total': total, 'dis': dis, 'cust': customer})
+    quant = 8
+    return render(request, 'order.html', {'dit': d, 'total': total, 'dis': dis, 'cust': customer, 'quant':quant})
 
 
 def inc_item(request, myid):
@@ -359,12 +384,14 @@ def change_address(request):
         phone2 = request.POST['phone2']
         city2 = request.POST['city2']
         address2 = request.POST['address2']
+        pincode2 = request.POST['pincode2']
+
         c = "update orders set cust_id='{}',C_name='{}',ord_date='{}',C_phone='{}'," \
-            "city='{}',address='{}' where cust_id='{}'".format(cust,
-                                                               name2,
-                                                               date.today(),
-                                                               phone2, city2,
-                                                               address2, cust)
+            "city='{}',address='{}',pincode='{}' where cust_id='{}'".format(cust,
+                                                                            name2,
+                                                                            date.today(),
+                                                                            phone2, city2,
+                                                                            address2, pincode2, cust)
         cursor.execute(c)
         m.commit()
         return redirect('/shop/order')
@@ -381,10 +408,12 @@ def order_complete(request):
     ord_id = l[0][0]
     c = "insert into order_items SELECT '{}',P_id,quantity from cart where cust_id = '{}' ".format(ord_id, us)
     cursor.execute(c)
-    c = "delete from cart where cust_id = '{}'".format(us)
+    c = "call delete_cart('{}')".format(us)
     cursor.execute(c)
-    c = "delete from orders where cust_id='{}'".format(us)
-    cursor.execute(c)
+    # c = "delete from cart where cust_id = '{}'".format(us)
+    # cursor.execute(c)
+    # c = "delete from orders where cust_id='{}'".format(us)
+    # cursor.execute(c)
     m.commit()
 
     return redirect('/shop')
@@ -463,3 +492,30 @@ def order_history(request):
         return render(request, 'order_history.html', {'dict': dit, 'ord_exist': item_ordered})
     messages.error(request, "Login to view your order history!!!!")
     return redirect('/shop')
+
+
+def admin_page(request):
+    if request.method == 'POST':
+        m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+        cursor = m.cursor()
+
+        P_id = request.POST['Pid']
+        P_name = request.POST['Pname']
+        P_desc = request.POST['desc']
+        P_brand = request.POST['P_brand']
+        P_price = request.POST['Price']
+        P_catid = request.POST['cat_id']
+        P_quantity = request.POST['quantity']
+        print(P_brand, P_quantity, P_catid, P_price, P_desc, P_id, P_name)
+        files = request.FILES
+        image = files.get("image")
+        P_image = 'shop/uploads/' +str(image)
+        print(P_image)
+        instance = ImageModel()
+        instance.image = image
+        instance.save()
+        c = "insert into product values ('{}','{}','{}','{}','{}','{}','{}')".format(P_id, P_name.upper(), P_image, P_desc,P_brand, P_price, P_catid)
+        cursor.execute(c)
+        m.commit()
+
+    return render(request, 'admin_page.html')
