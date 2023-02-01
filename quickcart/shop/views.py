@@ -58,15 +58,28 @@ def register(request):
         city = request.POST.get('city', '')
         state = request.POST.get('state', '')
         pincode = request.POST.get('pincode', '')
-        user = User.objects.create_user(name, email, password)
-        user.save()
+        f = -1
         m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
         cursor = m.cursor()
+        try:
+            isexits = User.objects.get(username=name)
+            f = 1
+            l = "select * from users where Name = '{}'".format(isexits)
+            cursor.execute(l)
+            em = tuple(cursor.fetchall())
+            if em == ():
+                isexits.delete()
+                f = 0
+        except:
+            f = 2
+            user = User.objects.create_user(name, email, password)
+            user.save()
+
         l = "select * from users where Phone='{}' or Email='{}'".format(phone, email)
         cursor.execute(l)
         p = tuple(cursor.fetchall())
 
-        if p != ():
+        if p != () or f == 1:
             messages.error(request, 'Email already exists')
             return redirect('/shop/register')
         c = "insert into users values ( '{}','{}','{}','{}','{}','{}','{}','{}' )".format(name, password, email, adrs,
@@ -114,7 +127,25 @@ def logout_check(request):
 
 def contact(request):
     if request.method == "POST":
-        redirect('/shop/conatct/')
+        name = request.POST["name"]
+        email = request.POST["email"]
+        phone = request.POST["phone"]
+        address = request.POST["address"]
+        city = request.POST["city"]
+        state = request.POST["state"]
+        pincode = request.POST["pincode"]
+        feedback_desc = request.POST["desc"]
+        m = sql.connect(host="localhost", user="root", passwd="Pramod@12", database="register")
+        cursor = m.cursor()
+        c = "insert into contact_us values ( '{}','{}','{}','{}','{}','{}','{}','{}' )".format(name, email, address,
+                                                                                               city,
+                                                                                               state,
+                                                                                               phone, pincode,
+                                                                                               feedback_desc)
+        cursor.execute(c)
+        m.commit()
+        messages.success(request, "Your feedback submitted successfully")
+        return redirect('/shop')
 
     return render(request, 'contact.html')
 
@@ -150,7 +181,7 @@ def prod_view(request, myid):
         c = "select * from reviews where prod_id='{}' and cust_id != '{}'".format(myid, cust)
         cursor.execute(c)
         other_rev = tuple(cursor.fetchall())
-        # print(other_rev)
+
         i = 0
         oth_rev = []
         oth_exist = False
@@ -163,7 +194,7 @@ def prod_view(request, myid):
                 else:
                     break
                 i += 1
-        # print(oth_rev)
+
         if top_rev != ():
             r_exist = True
             for i in range(len(top_rev)):
@@ -300,7 +331,7 @@ def order(request):
 
     cursor.execute(c)
     us = tuple(cursor.fetchall())
-    print(us1)
+
     if us == ():
         c = "insert into orders(cust_id,C_name,ord_date,C_phone,city,state,address,pincode)" \
             " values('{}','{}',sysdate(),'{}','{}','{}','{}','{}')".format(cust,
@@ -340,7 +371,7 @@ def order(request):
     cursor.execute(c)
     m.commit()
     quant = 8
-    return render(request, 'order.html', {'dit': d, 'total': total, 'dis': dis, 'cust': customer, 'quant':quant})
+    return render(request, 'order.html', {'dit': d, 'total': total, 'dis': dis, 'cust': customer, 'quant': quant})
 
 
 def inc_item(request, myid):
@@ -452,8 +483,8 @@ def review_star(request, myid):
             rev_desc = request.POST['rev_desc']
             rev_star = request.POST['rev_star']
             us_name = request.user.username
-            c = "insert into reviews values('{}','{}','{}','{}',null,'{}')".format(cust, us_name,
-                                                                                   rev_desc, rev_star, myid)
+            c = "insert into reviews values('{}','{}','{}','{}','{}')".format(cust, us_name,
+                                                                              rev_desc, rev_star, myid)
             cursor.execute(c)
             m.commit()
 
@@ -506,15 +537,16 @@ def admin_page(request):
         P_price = request.POST['Price']
         P_catid = request.POST['cat_id']
         P_quantity = request.POST['quantity']
-        print(P_brand, P_quantity, P_catid, P_price, P_desc, P_id, P_name)
+
         files = request.FILES
         image = files.get("image")
-        P_image = 'shop/uploads/' +str(image)
-        print(P_image)
+        P_image = 'shop/uploads/' + str(image)
+
         instance = ImageModel()
         instance.image = image
         instance.save()
-        c = "insert into product values ('{}','{}','{}','{}','{}','{}','{}')".format(P_id, P_name.upper(), P_image, P_desc,P_brand, P_price, P_catid)
+        c = "insert into product values ('{}','{}','{}','{}','{}','{}','{}')".format(P_id, P_name.upper(), P_image,
+                                                                                     P_desc, P_brand, P_price, P_catid)
         cursor.execute(c)
         m.commit()
 
