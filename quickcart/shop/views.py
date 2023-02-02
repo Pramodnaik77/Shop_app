@@ -166,6 +166,9 @@ def prod_view(request, myid):
              'P_brand': t[i][4], 'P_price': t[i][5]}
     l = []
     rev = {}
+    r_exist = False
+    oth_exist = False
+    oth_rev = []
     if request.user.is_authenticated:
         cust = request.user.email
         c = "select * from cart where cust_id='{}'".format(cust)
@@ -181,7 +184,7 @@ def prod_view(request, myid):
         c = "select * from reviews where prod_id='{}' and cust_id != '{}'".format(myid, cust)
         cursor.execute(c)
         other_rev = tuple(cursor.fetchall())
-
+        r_exist=True
         i = 0
         oth_rev = []
         oth_exist = False
